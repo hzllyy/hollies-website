@@ -104,19 +104,34 @@ body {
     position: fixed;
     height: 60vh;
     top: 27vh;
-    left: 28vh;
+    left: 15%;
 }
 
 .developer {
     position: fixed;
     height: 64vh;
     top: 34vh;
-    left: 76vh;
+    left: 45%;
 }
 
 .creator {
     position: fixed;
     height: 55vh;
-    top: 48vh;
-    left: 50%;
+    top: 47vh;
+    left: 30%;
+}
+
+.zoom-out {
+  animation: zoomOut 0.5s forwards;
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }

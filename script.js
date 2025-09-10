@@ -106,24 +106,37 @@ window.addEventListener("scroll", () => {
         creator.setAttribute('data-aos-duration', '300'); 
         creator.setAttribute('data-aos-once', 'true');
 
-        creator.style.transform = `translateX(-50%)`;
-
         document.body.appendChild(creator);
     }
 
     if (scrollTop <= 3500 && designer) {
-        designer.remove();
-        designer = null;
+        designer.classList.add('zoom-out');
+        designer.addEventListener('animationend', () => {
+        if (designer) {
+            designer.remove();
+            designer = null;
+            }
+        }, { once: true });
     }
 
     if (scrollTop <= 4000 && developer) {
-        developer.remove();
-        developer = null;
+        developer.classList.add('zoom-out');
+        developer.addEventListener('animationend', () => {
+        if (developer) {
+            developer.remove();
+            developer = null;
+            }
+        }, { once: true });
     }
 
     if (scrollTop <= 4500 && creator) {
-        creator.remove();
-        creator = null;
+        creator.classList.add('zoom-out');
+        creator.addEventListener('animationend', () => {
+        if (creator) {
+            creator.remove();
+            creator = null;
+            }
+        }, { once: true });
     }
 
 
