@@ -1,5 +1,5 @@
 body {
-    height: 2500px;
+    height: 6000px;
     overflow-x: hidden;
 }
 
@@ -68,7 +68,7 @@ body {
 }
 
 #extend {
-    height: 34vh;
+    height: 34.08vh;
     transform-origin: center top;
 }
 
@@ -84,4 +84,39 @@ body {
 #logo {
     height: 28vh;
     transform-origin: center top;
+}
+
+.iama-wrapper {
+    position: fixed;
+    top: 37vh;
+    left: 50%;
+    transform: translateX(-50%);
+    height: auto;
+    display: flex;  
+}
+
+#iama {
+    height: 22vh;
+    opacity: 0;
+}
+
+.designer {
+    position: fixed;
+    height: 60vh;
+    top: 27vh;
+    left: 28vh;
+}
+
+.developer {
+    position: fixed;
+    height: 64vh;
+    top: 34vh;
+    left: 76vh;
+}
+
+.creator {
+    position: fixed;
+    height: 55vh;
+    top: 48vh;
+    left: 50%;
 }

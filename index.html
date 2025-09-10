@@ -6,6 +6,9 @@
     <title>Holly's Website</title>
 
     <link rel="stylesheet" href="styles.css">
+
+    <!-- animate on scroll library -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 <body>
     <img src="images/portfolio_screen.PNG" id="screen">
@@ -25,12 +28,20 @@
     <div class="extender-wrapper">
         <img src="images/window-extender.png" id="extend">
     </div>
+
+    <div class="iama-wrapper">
+        <img src="images/iama.png" id="iama">
+    </div>
     
     <div class="logo-wrapper">
         <img src="images/logo-left.PNG" id="logo">
     </div>
     
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
