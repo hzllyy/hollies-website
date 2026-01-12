@@ -207,6 +207,54 @@ body {
     grid-area: c;
 }
 
+.hobby {
+  position: relative;
+  display: inline-block;
+}
+
+.hobby::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: 115%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+  
+  background: black;
+  color: white;
+  font-family: 'Anonymous Pro';
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.hobby::before {
+  content: '';
+  position: absolute;
+  bottom: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  border: 6px solid transparent;
+  border-top-color: black;
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.hobby:hover::after,
+.hobby:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+
 .avatar {
     height: 75vh;
 }
@@ -222,8 +270,8 @@ body {
     padding: 0.5vh 1vh;
 }
 
-.nav-btns p:hover {
-    cursor: pointer;
+h1, h2, p{
+    font-family: "Anonymous Pro";
 }
 
 /* HOBBIES */
@@ -231,7 +279,7 @@ body {
 .hobbies-div {
     display: flex;
     gap: 2vh;
-    padding: 5vh 2vh;
+    padding: 3vh 2vh;
 }
 
 .hobbies-div img {
@@ -240,6 +288,7 @@ body {
 
 .hobbies-div img:hover {
     cursor: pointer;
+    transform: scale(1.2);
 }
 
 .about-me {
@@ -252,10 +301,8 @@ body {
     grid-template-areas:
         'a b b'
         'a b b'
-        'a b b'
-        'a b b'
-        'a b b'
         'a c c';
+    grid-template-rows: 1fr 1fr 1fr;
     gap: 2vh;
 }
 
@@ -274,9 +321,32 @@ body {
     width: 5vh;
     border-radius: 5px;
     background-color: #FF98CD;
+    font-size: 25px;
 }
 
 .outfit-switch button:hover {
     cursor: pointer;
     border: 3px solid black;
+    transform: scale(1.1);
 }
+
+.outfit-switch button::selection {
+    border: 3px solid black;
+}
+
+.grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+  
+  animation: grain 0.3s steps(3) infinite;
+}
+

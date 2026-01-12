@@ -32,24 +32,94 @@ let developer = null;
 let creator = null;
 let finalized = false;
 
-function blinkAvatar(img) {
-  img.src = 'images/default-avatar-closed.PNG';
+let blinkInterval = null;
+let currentOutfit = 'default';
 
-  setTimeout(() => {
-    img.src = 'images/default-avatar-open.PNG';
-  }, 120);
+let aboutMeCreated = false;
+let avatarWindowEl = null;
+let summaryWindowEl = null;
+let hobbiesWindowEl = null;
+
+// function to handle blinking
+function startBlinking(avatarElement, outfit = 'default') {
+    if (blinkInterval) {
+        clearInterval(blinkInterval);
+    }
+
+    blinkInterval = setInterval(() => {
+        avatarElement.src = `images/${outfit}-avatar-closed.PNG`;
+
+        setTimeout(() => {
+            avatarElement.src = `images/${outfit}-avatar-open.PNG`;
+        }, 150);
+    }, 2000);
 }
 
-function startBlinking(img) {
-  function blinkLoop() {
-    blinkAvatar(img);
+const aboutMe = document.createElement('div');
+document.body.appendChild(aboutMe);
+aboutMe.className = 'about-me';
 
-    const nextBlink = Math.random() * 4000 + 2000;
+function createWindow(windowId, content, headerText, buttons) {
+    const avatarWindow = document.createElement('div');
+    avatarWindow.className = "aboutme-window";
+    avatarWindow.id = windowId;
 
-    setTimeout(blinkLoop, nextBlink);
-  }
+    avatarWindow.setAttribute('data-aos', 'zoom-in');
+    avatarWindow.setAttribute('data-aos-duration', '300'); 
+    avatarWindow.setAttribute('data-aos-once', 'true');
 
-  blinkLoop();
+    // window header
+    const avatarHeader = document.createElement('div');
+    avatarHeader.className = 'aboutme-header'
+    const headerDesc = document.createElement('p')
+    headerDesc.textContent = headerText;
+
+    const navBtns = document.createElement('div');
+    navBtns.className = 'nav-btns';
+    
+    const x = document.createElement('p');
+    x.textContent = 'x';
+    const minus = document.createElement('p');
+    minus.textContent = '-';
+    const o = document.createElement('p');
+    o.textContent = 'o';
+
+    const navButtons = [x, minus, o];
+    navButtons.forEach((button) => {
+        navBtns.appendChild(button);
+    })
+
+    avatarHeader.appendChild(headerDesc);
+    avatarHeader.appendChild(navBtns);
+
+    avatarWindow.appendChild(avatarHeader);
+    aboutMe.appendChild(avatarWindow);
+
+    // inner window
+    const innerWindow = document.createElement('div');
+    innerWindow.className = 'aboutme-inner-window';
+
+    const belowHeader = document.createElement('div');
+    belowHeader.className = 'belowHeader';
+
+    belowHeader.appendChild(innerWindow);
+    if (buttons instanceof Node) {
+        belowHeader.appendChild(buttons);
+    }
+    avatarWindow.appendChild(belowHeader);
+    innerWindow.appendChild(content);
+
+    return avatarWindow
+}
+
+function removeAboutMeWindow(windowEl, callback) {
+    if (!windowEl) return;
+
+    windowEl.classList.add('zoom-out');
+    windowEl.addEventListener('animationend', () => {
+        windowEl.remove();
+        if (callback) callback();
+    }, { once: true });
 }
 
 window.addEventListener("scroll", () => {
@@ -139,7 +209,6 @@ window.addEventListener("scroll", () => {
         }, { once: true });
     }
 
-
     function hideUIOpacity() {
         staticUI.forEach(el => {
             if (!el) return;
@@ -185,59 +254,6 @@ window.addEventListener("scroll", () => {
         showUIOpacity();
     }
 
-    const aboutMe = document.createElement('div');
-    document.body.appendChild(aboutMe);
-    aboutMe.className = 'about-me';
-
-    function createWindow(windowId, content, headerText, buttons) {
-        const avatarWindow = document.createElement('div');
-        avatarWindow.className = "aboutme-window";
-        avatarWindow.id = windowId;
-
-        // window header
-        const avatarHeader = document.createElement('div');
-        avatarHeader.className = 'aboutme-header'
-        const headerDesc = document.createElement('p')
-        headerDesc.textContent = headerText;
-
-        const navBtns = document.createElement('div');
-        navBtns.className = 'nav-btns';
-        
-        const x = document.createElement('p');
-        x.textContent = 'x';
-        const minus = document.createElement('p');
-        minus.textContent = '-';
-        const o = document.createElement('p');
-        o.textContent = 'o';
-
-        const navButtons = [x, minus, o];
-        navButtons.forEach((button) => {
-            navBtns.appendChild(button);
-        })
-
-        avatarHeader.appendChild(headerDesc);
-        avatarHeader.appendChild(navBtns);
-
-        avatarWindow.appendChild(avatarHeader);
-        aboutMe.appendChild(avatarWindow);
-
-        // inner window
-        const innerWindow = document.createElement('div');
-        innerWindow.className = 'aboutme-inner-window';
-
-        const belowHeader = document.createElement('div');
-        belowHeader.className = 'belowHeader';
-
-        belowHeader.appendChild(innerWindow);
-        if (buttons instanceof Node) {
-            belowHeader.appendChild(buttons);
-        }
-        avatarWindow.appendChild(belowHeader);
-        innerWindow.appendChild(content);
-    }
-
-    let aboutMeCreated = false;
-
     if (scrollTop > 5500 && !aboutMeCreated) {
         aboutMeCreated = true;
 
@@ -250,49 +266,77 @@ window.addEventListener("scroll", () => {
         outfitSwitch.className = 'outfit-switch';
 
         const fits = [
-            "fa-solid fa-child-dress",
-            "fa-solid fa-star",
-            "fa-solid fa-snowflake",
-            "fa-solid fa-apple-whole"
+            { icon: "fa-solid fa-child-dress", outfit: 'default'},
+            { icon: "fa-solid fa-star", outfit: 'y2k'},
+            { icon: "fa-solid fa-snowflake", outfit: 'winter'},
+            { icon: "fa-solid fa-apple-whole", outfit: 'apple'}
         ]
 
-        fits.forEach(iconClass => {
+        fits.forEach(({ icon, outfit }) => {
             const fitButton = document.createElement('button');
             fitButton.className = 'fit-btn';
 
-            const icon = document.createElement('i');
-            icon.className = iconClass;
+            const iconElement = document.createElement('i');
+            iconElement.className = icon;
 
-            fitButton.appendChild(icon);
+            fitButton.appendChild(iconElement);
+
+            fitButton.addEventListener('click', () => {
+                currentOutfit = outfit;
+                avatar.src = `images/${outfit}-avatar-open.PNG`;
+                startBlinking(avatar, outfit);
+            })
+
             outfitSwitch.appendChild(fitButton);
         })
 
-        createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
+        avatarWindowEl = createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
+
+        startBlinking(avatar, 'default');
 
         const aboutMeContent = document.createElement('h1');
         aboutMeContent.textContent = 'About Me';
 
-        createWindow('summary-window-id', aboutMeContent, 'aboutme.jpg', null);
+        summaryWindowEl = createWindow('summary-window-id', aboutMeContent, 'aboutme.txt', null);
 
         const hobbyArray = [
-            'images/switch.PNG',
-            'images/read.PNG',
-            'images/draw.PNG',
-            'images/baking.PNG',
-            'images/dance.PNG'
+            { src: 'images/switch.PNG', label: 'gaming'},
+            { src: 'images/read.PNG', label: 'reading'},
+            { src: 'images/draw.PNG', label: 'drawing'},
+            { src: 'images/baking.PNG', label: 'baking'},
+            { src: 'images/dance.PNG', label: 'dancing'}
         ]
 
         const hobbies = document.createElement('div');
         hobbies.className = 'hobbies-div';
 
-        hobbyArray.forEach((hobby) => {
-            const myHobby = document.createElement('img');
-            myHobby.src = hobby;
-            myHobby.alt = hobby;
-            hobbies.append(myHobby);
-        });
+        hobbyArray.forEach(({ src, label }) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'hobby';
 
-        createWindow('hobbies-window-id', hobbies, 'hobbies.jpg', null);
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = label;
+
+            wrapper.dataset.label = label;
+            wrapper.appendChild(img);
+            hobbies.appendChild(wrapper);
+        })
+
+        hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'hobbies.jpg', null);
+    }
+
+    if (scrollTop <= 5500 && aboutMeCreated) {
+        aboutMeCreated = false;
+
+        if (blinkInterval) {
+            clearInterval(blinkInterval);
+            blinkInterval = null;
+        }
+
+        removeAboutMeWindow(avatarWindowEl, () => avatarWindowEl = null);
+        removeAboutMeWindow(summaryWindowEl, () => summaryWindowEl = null);
+        removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
     }
 }
 );
