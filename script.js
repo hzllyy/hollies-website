@@ -30,6 +30,27 @@ let frozenTitle = 0;
 let designer = null;
 let developer = null;
 let creator = null;
+let finalized = false;
+
+function blinkAvatar(img) {
+  img.src = 'images/default-avatar-closed.PNG';
+
+  setTimeout(() => {
+    img.src = 'images/default-avatar-open.PNG';
+  }, 120);
+}
+
+function startBlinking(img) {
+  function blinkLoop() {
+    blinkAvatar(img);
+
+    const nextBlink = Math.random() * 4000 + 2000;
+
+    setTimeout(blinkLoop, nextBlink);
+  }
+
+  blinkLoop();
+}
 
 window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY;
@@ -73,7 +94,7 @@ window.addEventListener("scroll", () => {
         iama.style.opacity = Math.min(fade, 1);
     }
 
-    else if (scrollTop > 3500 && !designer) {
+    else if (scrollTop > 3500 && scrollTop < 5000 && !designer) {
         designer = document.createElement('img');
         designer.className = 'designer';
         designer.src = 'images/designer.png';
@@ -85,7 +106,7 @@ window.addEventListener("scroll", () => {
         document.body.appendChild(designer);
     } 
 
-    if (scrollTop > 4000 && !developer) {
+    if (scrollTop > 4000 && scrollTop < 5000 && !developer) {
         developer = document.createElement('img');
         developer.className = 'developer';
         developer.src = 'images/developer.png';
@@ -97,7 +118,7 @@ window.addEventListener("scroll", () => {
         document.body.appendChild(developer);
     }
 
-    if (scrollTop > 4500 && !creator) {
+    if (scrollTop > 4500 && scrollTop < 5000 && !creator) {
         creator = document.createElement('img');
         creator.className = 'creator';
         creator.src = 'images/creator.png';
@@ -109,35 +130,169 @@ window.addEventListener("scroll", () => {
         document.body.appendChild(creator);
     }
 
-    if (scrollTop <= 3500 && designer) {
-        designer.classList.add('zoom-out');
-        designer.addEventListener('animationend', () => {
-        if (designer) {
-            designer.remove();
-            designer = null;
-            }
+    // helper function to remove dynamic windows
+    function removeWindow(el, clearRef) {
+        el.classList.add('zoom-out');
+        el.addEventListener('animationend', () => {
+            el.remove();
+            clearRef();
         }, { once: true });
+    }
+
+
+    function hideUIOpacity() {
+        staticUI.forEach(el => {
+            if (!el) return;
+            el.style.transition = 'opacity 0.4s ease';
+            el.style.opacity = '0';
+        });
+    }
+
+    function showUIOpacity() {
+        staticUI.forEach(el => {
+            if (!el) return;
+            el.style.transition = 'opacity 0.4s ease';
+            el.style.opacity = '1';
+        });
+    }
+
+    if (scrollTop <= 3500 && designer) {
+        removeWindow(designer, () => designer = null);
     }
 
     if (scrollTop <= 4000 && developer) {
-        developer.classList.add('zoom-out');
-        developer.addEventListener('animationend', () => {
-        if (developer) {
-            developer.remove();
-            developer = null;
-            }
-        }, { once: true });
+        removeWindow(developer, () => developer = null);
     }
 
     if (scrollTop <= 4500 && creator) {
-        creator.classList.add('zoom-out');
-        creator.addEventListener('animationend', () => {
-        if (creator) {
-            creator.remove();
-            creator = null;
-            }
-        }, { once: true });
+        removeWindow(creator, () => creator = null);
     }
 
+    const staticUI = [nwindow, extender, logo, iama];
 
-});
+    if (scrollTop > 5000 && !finalized) {
+        finalized = true;
+
+        removeWindow(designer, () => designer = null);
+        removeWindow(developer, () => developer = null);
+        removeWindow(creator, () => creator = null);
+
+        hideUIOpacity();
+    }
+
+    if (scrollTop <= 5000) {
+        finalized = false;
+        showUIOpacity();
+    }
+
+    const aboutMe = document.createElement('div');
+    document.body.appendChild(aboutMe);
+    aboutMe.className = 'about-me';
+
+    function createWindow(windowId, content, headerText, buttons) {
+        const avatarWindow = document.createElement('div');
+        avatarWindow.className = "aboutme-window";
+        avatarWindow.id = windowId;
+
+        // window header
+        const avatarHeader = document.createElement('div');
+        avatarHeader.className = 'aboutme-header'
+        const headerDesc = document.createElement('p')
+        headerDesc.textContent = headerText;
+
+        const navBtns = document.createElement('div');
+        navBtns.className = 'nav-btns';
+        
+        const x = document.createElement('p');
+        x.textContent = 'x';
+        const minus = document.createElement('p');
+        minus.textContent = '-';
+        const o = document.createElement('p');
+        o.textContent = 'o';
+
+        const navButtons = [x, minus, o];
+        navButtons.forEach((button) => {
+            navBtns.appendChild(button);
+        })
+
+        avatarHeader.appendChild(headerDesc);
+        avatarHeader.appendChild(navBtns);
+
+        avatarWindow.appendChild(avatarHeader);
+        aboutMe.appendChild(avatarWindow);
+
+        // inner window
+        const innerWindow = document.createElement('div');
+        innerWindow.className = 'aboutme-inner-window';
+
+        const belowHeader = document.createElement('div');
+        belowHeader.className = 'belowHeader';
+
+        belowHeader.appendChild(innerWindow);
+        if (buttons instanceof Node) {
+            belowHeader.appendChild(buttons);
+        }
+        avatarWindow.appendChild(belowHeader);
+        innerWindow.appendChild(content);
+    }
+
+    let aboutMeCreated = false;
+
+    if (scrollTop > 5500 && !aboutMeCreated) {
+        aboutMeCreated = true;
+
+        const avatar = document.createElement('img');
+        avatar.src = 'images/default-avatar-open.PNG';
+        avatar.alt = 'avatar';
+        avatar.className = 'avatar';
+
+        const outfitSwitch = document.createElement('div');
+        outfitSwitch.className = 'outfit-switch';
+
+        const fits = [
+            "fa-solid fa-child-dress",
+            "fa-solid fa-star",
+            "fa-solid fa-snowflake",
+            "fa-solid fa-apple-whole"
+        ]
+
+        fits.forEach(iconClass => {
+            const fitButton = document.createElement('button');
+            fitButton.className = 'fit-btn';
+
+            const icon = document.createElement('i');
+            icon.className = iconClass;
+
+            fitButton.appendChild(icon);
+            outfitSwitch.appendChild(fitButton);
+        })
+
+        createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
+
+        const aboutMeContent = document.createElement('h1');
+        aboutMeContent.textContent = 'About Me';
+
+        createWindow('summary-window-id', aboutMeContent, 'aboutme.jpg', null);
+
+        const hobbyArray = [
+            'images/switch.PNG',
+            'images/read.PNG',
+            'images/draw.PNG',
+            'images/baking.PNG',
+            'images/dance.PNG'
+        ]
+
+        const hobbies = document.createElement('div');
+        hobbies.className = 'hobbies-div';
+
+        hobbyArray.forEach((hobby) => {
+            const myHobby = document.createElement('img');
+            myHobby.src = hobby;
+            myHobby.alt = hobby;
+            hobbies.append(myHobby);
+        });
+
+        createWindow('hobbies-window-id', hobbies, 'hobbies.jpg', null);
+    }
+}
+);

@@ -1,5 +1,5 @@
 body {
-    height: 6000px;
+    height: 10000px;
     overflow-x: hidden;
 }
 
@@ -68,7 +68,7 @@ body {
 }
 
 #extend {
-    height: 34.08vh;
+    height: 34.05vh;
     transform-origin: center top;
 }
 
@@ -134,4 +134,149 @@ body {
     opacity: 0;
     transform: scale(0.5);
   }
+}
+
+.zoom-in {
+    animation: zoomIn 0.5s forwards;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* about me */
+
+.aboutme-window {
+    background-color: #F9C9E2;
+    border: solid 2px black;
+    border-radius: 5px;
+}
+
+.aboutme-header {
+    background-color: #FF98CD;
+    border-bottom: solid 2px black;
+    border-radius: 5px 5px 0 0;
+    z-index: 100;
+    padding: 10px;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.anonymous-pro-regular {
+  font-family: "Anonymous Pro", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.aboutme-header p {
+    margin: 0;
+    font-family: "Anonymous Pro";
+    padding-left: 2vh;
+}
+
+.aboutme-inner-window {
+    background-color: #FFe7F4;
+    border: solid 2px black;
+    border-radius: 5px;
+    margin: 2vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 3vh;
+}
+
+#avatar-window-id {
+    grid-area: a;
+}
+
+#summary-window-id {
+    grid-area: b;
+}
+
+#hobbies-window-id {
+    grid-area: c;
+}
+
+.avatar {
+    height: 75vh;
+}
+
+.nav-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5vh;
+}
+
+.nav-btns p {
+    border: 2px solid black;
+    padding: 0.5vh 1vh;
+}
+
+.nav-btns p:hover {
+    cursor: pointer;
+}
+
+/* HOBBIES */
+
+.hobbies-div {
+    display: flex;
+    gap: 2vh;
+    padding: 5vh 2vh;
+}
+
+.hobbies-div img {
+    height: 10vh;
+}
+
+.hobbies-div img:hover {
+    cursor: pointer;
+}
+
+.about-me {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    display: grid;
+    grid-template-areas:
+        'a b b'
+        'a b b'
+        'a b b'
+        'a b b'
+        'a b b'
+        'a c c';
+    gap: 2vh;
+}
+
+.belowHeader {
+    display: flex;
+}
+
+.outfit-switch {
+    margin: 2vh 2vh 2vh 0;
+}
+
+.outfit-switch button {
+    margin-bottom: 1vh;
+    border: 2px solid black;
+    height: 5vh;
+    width: 5vh;
+    border-radius: 5px;
+    background-color: #FF98CD;
+}
+
+.outfit-switch button:hover {
+    cursor: pointer;
+    border: 3px solid black;
 }
