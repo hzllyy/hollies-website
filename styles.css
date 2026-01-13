@@ -195,18 +195,6 @@ body {
     padding: 0 3vh;
 }
 
-#avatar-window-id {
-    grid-area: a;
-}
-
-#summary-window-id {
-    grid-area: b;
-}
-
-#hobbies-window-id {
-    grid-area: c;
-}
-
 .hobby {
   position: relative;
   display: inline-block;
@@ -253,7 +241,6 @@ body {
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
-
 
 .avatar {
     height: 75vh;
@@ -304,6 +291,19 @@ h1, h2, p{
         'a c c';
     grid-template-rows: 1fr 1fr 1fr;
     gap: 2vh;
+    overflow: visible;
+}
+
+#avatar-window-id {
+    grid-area: a;
+}
+
+#summary-window-id {
+    grid-area: b;
+}
+
+#hobbies-window-id {
+    grid-area: c;
 }
 
 .belowHeader {
@@ -311,6 +311,8 @@ h1, h2, p{
 }
 
 .outfit-switch {
+    display: flex;
+    flex-direction: column;
     margin: 2vh 2vh 2vh 0;
 }
 
@@ -328,6 +330,17 @@ h1, h2, p{
     cursor: pointer;
     border: 3px solid black;
     transform: scale(1.1);
+}
+
+.outfit-switch-off .fit-btn {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.outfit-switch-off .fit-btn:hover {
+    cursor: not-allowed;
+    border: 2px solid black;
+    transform: none;
 }
 
 .outfit-switch button::selection {

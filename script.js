@@ -40,6 +40,12 @@ let avatarWindowEl = null;
 let summaryWindowEl = null;
 let hobbiesWindowEl = null;
 
+let summaryHobbiesHidden = false;
+
+let start = false;
+let rectLeft = null;
+let rectTop = null
+
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
     if (blinkInterval) {
@@ -119,6 +125,30 @@ function removeAboutMeWindow(windowEl, callback) {
     windowEl.addEventListener('animationend', () => {
         windowEl.remove();
         if (callback) callback();
+    }, { once: true });
+}
+
+function hideWindowWithAnimation(windowEl) {
+    if (!windowEl) return;
+    
+    windowEl.classList.add('zoom-out');
+    windowEl.addEventListener('animationend', () => {
+        windowEl.style.visibility = 'hidden';
+        windowEl.style.pointerEvents = 'none';
+    }, { once: true });
+}
+
+// Helper function to show window with animation
+function showWindowWithAnimation(windowEl) {
+    if (!windowEl) return;
+    
+    windowEl.style.visibility = 'visible';
+    windowEl.style.pointerEvents = 'auto';
+    windowEl.classList.remove('zoom-out');
+    
+    windowEl.classList.add('zoom-in');
+    windowEl.addEventListener('animationend', () => {
+        windowEl.classList.remove('zoom-in');
     }, { once: true });
 }
 
@@ -282,11 +312,36 @@ window.addEventListener("scroll", () => {
             fitButton.appendChild(iconElement);
 
             fitButton.addEventListener('click', () => {
-                currentOutfit = outfit;
-                avatar.src = `images/${outfit}-avatar-open.PNG`;
-                startBlinking(avatar, outfit);
-            })
-
+            currentOutfit = outfit;
+            
+            // Check which avatar is currently visible (original or clone)
+            const isCloneVisible = scrollTop > 6000 && scrollTop <= 7000;
+            
+            if (isCloneVisible) {
+                // Update clone only (since it's the one visible)
+                const clone = document.getElementById('avatar-window-clone');
+                if (clone) {
+                    const clonedAvatar = clone.querySelector('.avatar');
+                    if (clonedAvatar) {
+                        clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
+                        // Restart blinking with new outfit
+                        startBlinking(clonedAvatar, outfit);
+                    }
+                }
+                
+                // Also update the original (hidden) to keep it in sync
+                if (avatar) {
+                    avatar.src = `images/${outfit}-avatar-open.PNG`;
+                    // Don't start blinking on original - it's hidden
+                }
+            } else {
+                // Update original only (clone doesn't exist)
+                if (avatar) {
+                    avatar.src = `images/${outfit}-avatar-open.PNG`;
+                    startBlinking(avatar, outfit);
+                }
+            }
+        });
             outfitSwitch.appendChild(fitButton);
         })
 
@@ -324,6 +379,14 @@ window.addEventListener("scroll", () => {
         })
 
         hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'hobbies.jpg', null);
+
+        const element = avatarWindowEl;
+        const rect = element.getBoundingClientRect();
+
+        console.log({
+            left: rect.left,        // Distance from left edge of viewport
+            top: rect.top,          // Distance from top edge of viewport
+        });
     }
 
     if (scrollTop <= 5500 && aboutMeCreated) {
@@ -338,5 +401,228 @@ window.addEventListener("scroll", () => {
         removeAboutMeWindow(summaryWindowEl, () => summaryWindowEl = null);
         removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
     }
-}
+
+    if (scrollTop > 6000 && !summaryHobbiesHidden) {
+        summaryHobbiesHidden = true;
+        
+        hideWindowWithAnimation(summaryWindowEl);
+        hideWindowWithAnimation(hobbiesWindowEl);
+    }
+
+    if (scrollTop <= 6000 && summaryHobbiesHidden) {
+        summaryHobbiesHidden = false;
+        
+        showWindowWithAnimation(summaryWindowEl);
+        showWindowWithAnimation(hobbiesWindowEl);
+    }
+
+    if (scrollTop > 6000 && scrollTop <= 7000 && avatarWindowEl) {
+        const progress = (scrollTop - 6000) / 1000;
+
+        if (!start) {
+            // Stop blinking on the original before hiding it
+            const originalAvatarImg = avatarWindowEl.querySelector('.avatar');
+            if (originalAvatarImg && originalAvatarImg.dataset.blinkIntervalId) {
+                clearInterval(parseInt(originalAvatarImg.dataset.blinkIntervalId));
+                delete originalAvatarImg.dataset.blinkIntervalId;
+            }
+            
+            // Create a clone of the avatar window WITH the outfit switch buttons
+            const clone = avatarWindowEl.cloneNode(true);
+            clone.id = 'avatar-window-clone';
+            
+            // Get position of original
+            const rect = avatarWindowEl.getBoundingClientRect();
+            
+            // Position clone exactly where original is
+            clone.style.position = 'fixed';
+            clone.style.left = `${rect.left}px`;
+            clone.style.top = `${rect.top}px`;
+            clone.style.width = `${avatarWindowEl.offsetWidth}px`;
+            clone.style.zIndex = '1000';
+            
+            // Start blinking on the CLONE only
+            const clonedAvatarImg = clone.querySelector('.avatar');
+            if (clonedAvatarImg) {
+                clonedAvatarImg.src = `images/${currentOutfit}-avatar-open.PNG`;
+                startBlinking(clonedAvatarImg, currentOutfit);
+            }
+            
+            // Hide original
+            avatarWindowEl.style.visibility = 'hidden';
+            
+            // Store reference
+            avatarWindowEl.dataset.clone = 'true';
+            document.body.appendChild(clone);
+            
+            avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth;
+
+            const cloneOutfitSwitch = clone.querySelector('.outfit-switch');
+            if (cloneOutfitSwitch) {
+                cloneOutfitSwitch.classList.add('outfit-switch-off');
+            }
+            
+            start = true;
+        }
+
+        const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
+        const newWidth = originalWidth + (originalWidth * 1.65 * progress);
+        
+        // Update clone width
+        const clone = document.getElementById('avatar-window-clone');
+        if (clone) {
+            clone.style.width = `${newWidth}px`;
+            
+            // Get all elements
+            const innerWindow = clone.querySelector('.aboutme-inner-window');
+            const avatarImg = clone.querySelector('.avatar');
+            const outfitSwitch = clone.querySelector('.outfit-switch');
+            const belowHeader = clone.querySelector('.belowHeader');
+            
+            if (innerWindow && avatarImg && outfitSwitch && belowHeader) {
+                // Calculate stretch amount
+                const stretchAmount = newWidth - originalWidth;
+                
+                // Keep the flex container layout (buttons on right side)
+                belowHeader.style.display = 'flex';
+                belowHeader.style.alignItems = 'stretch';
+                
+                // Inner window stretches to fill space
+                innerWindow.style.flex = '1';
+                innerWindow.style.minWidth = '0';
+                innerWindow.style.display = 'flex';
+                innerWindow.style.justifyContent = 'center';
+                innerWindow.style.alignItems = 'center';
+                innerWindow.style.overflow = 'hidden';
+                
+                // Avatar stays fixed size
+                avatarImg.style.width = 'auto';
+                avatarImg.style.maxWidth = '75vh';
+                avatarImg.style.flexShrink = '0';
+                
+                // Outfit switch buttons stay on right, maintain size
+                outfitSwitch.style.flexShrink = '0';
+                outfitSwitch.style.width = 'auto';
+                outfitSwitch.style.display = 'flex';
+                outfitSwitch.style.flexDirection = 'column';
+                outfitSwitch.style.justifyContent = 'start';
+                outfitSwitch.style.padding = '0 2vh';
+                
+            }
+        }
+    }
+
+    if (scrollTop > 7000 && avatarWindowEl) {
+        const clone = document.getElementById('avatar-window-clone');
+        if (clone) {
+            if (!avatarWindowEl.dataset.originalWidth) {
+                avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.65;
+            }
+            
+            const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
+            const newWidth = originalWidth * 2.65;
+            
+            clone.style.width = `${newWidth}px`;
+            
+            // Ensure blinking
+            const clonedAvatarImg = clone.querySelector('.avatar');
+            if (clonedAvatarImg && !clonedAvatarImg.dataset.blinkingStarted) {
+                startBlinking(clonedAvatarImg, currentOutfit);
+            }
+
+            const cloneOutfitSwitch = clone.querySelector('.outfit-switch');
+            if (cloneOutfitSwitch && !cloneOutfitSwitch.classList.contains('outfit-switch-off')) {
+                cloneOutfitSwitch.classList.add('outfit-switch-off');
+            }
+            
+            // Maintain layout for full stretch
+            const innerWindow = clone.querySelector('.aboutme-inner-window');
+            const avatarImg = clone.querySelector('.avatar');
+            const outfitSwitch = clone.querySelector('.outfit-switch');
+            const belowHeader = clone.querySelector('.belowHeader');
+            
+            if (innerWindow && avatarImg && outfitSwitch && belowHeader) {
+                belowHeader.style.display = 'flex';
+                belowHeader.style.alignItems = 'stretch';
+                
+                innerWindow.style.flex = '1';
+                innerWindow.style.minWidth = '0';
+                innerWindow.style.display = 'flex';
+                innerWindow.style.justifyContent = 'center';
+                innerWindow.style.alignItems = 'center';
+                innerWindow.style.overflow = 'hidden';
+                
+                avatarImg.style.width = 'auto';
+                avatarImg.style.maxWidth = '75vh';
+                avatarImg.style.flexShrink = '0';
+                
+                outfitSwitch.style.flexShrink = '0';
+                outfitSwitch.style.width = 'auto';
+            }
+        }
+    }
+
+    if (scrollTop <= 6000 && avatarWindowEl) {
+        // Remove clone
+        const clone = document.getElementById('avatar-window-clone');
+        if (clone) {
+            // Stop blinking on the clone before removing
+            const clonedAvatarImg = clone.querySelector('.avatar');
+            if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
+                clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
+            }
+            clone.remove();
+        }
+        
+        // Show original
+        avatarWindowEl.style.visibility = '';
+        
+        // Reset any flex styles on original
+        const belowHeader = avatarWindowEl.querySelector('.belowHeader');
+        const innerWindow = avatarWindowEl.querySelector('.aboutme-inner-window');
+        const avatarImg = avatarWindowEl.querySelector('.avatar');
+        const outfitSwitch = avatarWindowEl.querySelector('.outfit-switch');
+        
+        if (belowHeader) {
+            belowHeader.style.display = '';
+            belowHeader.style.alignItems = '';
+        }
+        
+        if (innerWindow) {
+            innerWindow.style.flex = '';
+            innerWindow.style.minWidth = '';
+            innerWindow.style.display = '';
+            innerWindow.style.justifyContent = '';
+            innerWindow.style.alignItems = '';
+            innerWindow.style.overflow = '';
+        }
+        
+        if (avatarImg) {
+            avatarImg.style.width = '';
+            avatarImg.style.maxWidth = '';
+            avatarImg.style.flexShrink = '';
+        }
+        
+        if (outfitSwitch) {
+            outfitSwitch.style.flexShrink = '';
+            outfitSwitch.style.width = '';
+            outfitSwitch.style.display = '';
+            outfitSwitch.style.flexDirection = '';
+            outfitSwitch.style.justifyContent = '';
+            outfitSwitch.style.padding = '';
+        }
+        
+        // Restart blinking on ORIGINAL only
+        const originalAvatarImg = avatarWindowEl.querySelector('.avatar');
+        if (originalAvatarImg) {
+            originalAvatarImg.src = `images/${currentOutfit}-avatar-open.PNG`;
+            startBlinking(originalAvatarImg, currentOutfit);
+        }
+        
+        delete avatarWindowEl.dataset.originalWidth;
+        delete avatarWindowEl.dataset.clone;
+        start = false;
+    }
+
+    }
 );
