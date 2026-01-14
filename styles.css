@@ -97,7 +97,7 @@ body {
 
 #iama {
     height: 22vh;
-    opacity: 0;
+    display: none;
 }
 
 .designer {

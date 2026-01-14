@@ -42,6 +42,7 @@ let hobbiesWindowEl = null;
 
 let summaryHobbiesHidden = false;
 
+// start value for zoom check
 let start = false;
 let rectLeft = null;
 let rectTop = null
@@ -66,6 +67,7 @@ const aboutMe = document.createElement('div');
 document.body.appendChild(aboutMe);
 aboutMe.className = 'about-me';
 
+// create window for about me
 function createWindow(windowId, content, headerText, buttons) {
     const avatarWindow = document.createElement('div');
     avatarWindow.className = "aboutme-window";
@@ -119,6 +121,7 @@ function createWindow(windowId, content, headerText, buttons) {
     return avatarWindow
 }
 
+// helper function for removing about me windows
 function removeAboutMeWindow(windowEl, callback) {
     if (!windowEl) return;
 
@@ -129,6 +132,7 @@ function removeAboutMeWindow(windowEl, callback) {
     }, { once: true });
 }
 
+// hide iama window
 function hideWindowWithAnimation(windowEl) {
     if (!windowEl) return;
     
@@ -139,7 +143,7 @@ function hideWindowWithAnimation(windowEl) {
     }, { once: true });
 }
 
-// Helper function to show window with animation
+// helper to show iama window
 function showWindowWithAnimation(windowEl) {
     if (!windowEl) return;
     
@@ -152,6 +156,8 @@ function showWindowWithAnimation(windowEl) {
         windowEl.classList.remove('zoom-in');
     }, { once: true });
 }
+
+// SCROLL EVENTS START HERE
 
 window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY;
@@ -171,6 +177,7 @@ window.addEventListener("scroll", () => {
         nwindow.style.transform = `translateY(${-(scale2 - 1) * 30}%) scale(${scale2})`;
         extender.style.transform = `translateY(${-(scale2 - 1) * -2}%) scale(${scale2})`;
         logo.style.transform = `translateY(${-(scale2 - 1) * 20}%) scale(${scale2})`;
+        iama.style.display = 'none';
 
         // store final states
         scaledWindow = Math.min(scale2, 2);
@@ -180,6 +187,7 @@ window.addEventListener("scroll", () => {
         frozenTitle = -(scale2 - 1) * 110;
     }
 
+    // stretch out iama window
     else if (scrollTop > 2500 && scrollTop <= 3500) {
         let extra = scrollTop - 2500;
         const scale3 = 1 + extra / 1000;
@@ -187,6 +195,7 @@ window.addEventListener("scroll", () => {
         extender.style.transform = `translateY(${frozenExtend - extra * 0.04}%) scale(${scaledWindow})`;
         logo.style.transform = `translateY(${frozenLogo - extra * 0.048}%) scale(${scaledWindow})`;
         header.style.transform = `translateY(${frozenTitle - extra * 0.03}%) scale(${scaledWindow})`;
+        iama.style.display = 'block';
         iama.style.transform = `translateY(${-((1 + extra / 5000) - 1) * 550}%) scale(${scale3})`;
 
         // fade the caption
@@ -195,6 +204,7 @@ window.addEventListener("scroll", () => {
         iama.style.opacity = Math.min(fade, 1);
     }
 
+    // pop up windows for iama!
     else if (scrollTop > 3500 && scrollTop < 5000 && !designer) {
         designer = document.createElement('img');
         designer.className = 'designer';
@@ -240,6 +250,7 @@ window.addEventListener("scroll", () => {
         }, { once: true });
     }
 
+    // helper to show/hide using opacity instead of removing
     function hideUIOpacity() {
         staticUI.forEach(el => {
             if (!el) return;
@@ -256,6 +267,7 @@ window.addEventListener("scroll", () => {
         });
     }
 
+    // remove all windows when scrolling to about me
     if (scrollTop <= 3500 && designer) {
         removeWindow(designer, () => designer = null);
     }
@@ -285,6 +297,7 @@ window.addEventListener("scroll", () => {
         finalized = false;
     }
 
+    // create about me windows!
     if (scrollTop > 5500 && !aboutMeCreated) {
         aboutMeCreated = true;
 
@@ -348,6 +361,7 @@ window.addEventListener("scroll", () => {
 
         avatarWindowEl = createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
 
+        // avatar animation
         startBlinking(avatar, 'default');
 
         const aboutMeContent = document.createElement('h1');
@@ -390,6 +404,7 @@ window.addEventListener("scroll", () => {
         });
     }
 
+    // remove about me if scrolled up
     if (scrollTop <= 5500 && aboutMeCreated) {
         aboutMeCreated = false;
 
@@ -403,6 +418,7 @@ window.addEventListener("scroll", () => {
         removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
     }
 
+    // hide windows when scrolling past aboutme
     if (scrollTop > 6000 && !summaryHobbiesHidden) {
         summaryHobbiesHidden = true;
         
@@ -417,42 +433,43 @@ window.addEventListener("scroll", () => {
         showWindowWithAnimation(hobbiesWindowEl);
     }
 
+    // PAIN IN THE ASS avatar window zoom ;-;
     if (scrollTop > 6000 && scrollTop <= 7000 && avatarWindowEl) {
         const progress = (scrollTop - 6000) / 1000;
 
         if (!start) {
-            // Stop blinking on the original before hiding it
+            // stop blinking
             const originalAvatarImg = avatarWindowEl.querySelector('.avatar');
             if (originalAvatarImg && originalAvatarImg.dataset.blinkIntervalId) {
                 clearInterval(parseInt(originalAvatarImg.dataset.blinkIntervalId));
                 delete originalAvatarImg.dataset.blinkIntervalId;
             }
             
-            // Create a clone of the avatar window WITH the outfit switch buttons
+            // create clone
             const clone = avatarWindowEl.cloneNode(true);
             clone.id = 'avatar-window-clone';
             
-            // Get position of original
+            // grab og position
             const rect = avatarWindowEl.getBoundingClientRect();
             
-            // Position clone exactly where original is
+            // position correctly
             clone.style.position = 'fixed';
             clone.style.left = `${rect.left}px`;
             clone.style.top = `${rect.top}px`;
             clone.style.width = `${avatarWindowEl.offsetWidth}px`;
             clone.style.zIndex = '1000';
             
-            // Start blinking on the CLONE only
+            // start blinking on clone
             const clonedAvatarImg = clone.querySelector('.avatar');
             if (clonedAvatarImg) {
                 clonedAvatarImg.src = `images/${currentOutfit}-avatar-open.PNG`;
                 startBlinking(clonedAvatarImg, currentOutfit);
             }
             
-            // Hide original
+            // hide original
             avatarWindowEl.style.visibility = 'hidden';
             
-            // Store reference
+            // store ref
             avatarWindowEl.dataset.clone = 'true';
             document.body.appendChild(clone);
             
@@ -512,7 +529,7 @@ window.addEventListener("scroll", () => {
                 
                 bag.style.position = 'absolute';
                 bag.style.pointerEvents = 'none';
-                bag.style.height = '14vh';
+                bag.style.height = '75vh';
                 
                 console.log('bag created');
                 bagCreated = true;
@@ -528,6 +545,7 @@ window.addEventListener("scroll", () => {
         }
     }
 
+    // scroll past avatar zoom 
     if (scrollTop > 7000 && avatarWindowEl) {
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
@@ -551,7 +569,7 @@ window.addEventListener("scroll", () => {
                 cloneOutfitSwitch.classList.add('outfit-switch-off');
             }
             
-            // Maintain layout for full stretch
+            // maintain layout
             const innerWindow = clone.querySelector('.aboutme-inner-window');
             const avatarImg = clone.querySelector('.avatar');
             const outfitSwitch = clone.querySelector('.outfit-switch');
@@ -579,10 +597,10 @@ window.addEventListener("scroll", () => {
     }
 
     if (scrollTop <= 6000 && avatarWindowEl) {
-        // Remove clone
+        // remove clone
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
-            // Stop blinking on the clone before removing
+            // stop blinking on the clone before removing
             const clonedAvatarImg = clone.querySelector('.avatar');
             if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
                 clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
@@ -590,10 +608,9 @@ window.addEventListener("scroll", () => {
             clone.remove();
         }
         
-        // Show original
+        // show og avatarwindow
         avatarWindowEl.style.visibility = '';
         
-        // Reset any flex styles on original
         const belowHeader = avatarWindowEl.querySelector('.belowHeader');
         const innerWindow = avatarWindowEl.querySelector('.aboutme-inner-window');
         const avatarImg = avatarWindowEl.querySelector('.avatar');
@@ -628,7 +645,7 @@ window.addEventListener("scroll", () => {
             outfitSwitch.style.padding = '';
         }
         
-        // Restart blinking on ORIGINAL only
+        // restart og blinking
         const originalAvatarImg = avatarWindowEl.querySelector('.avatar');
         if (originalAvatarImg) {
             originalAvatarImg.src = `images/${currentOutfit}-avatar-open.PNG`;
