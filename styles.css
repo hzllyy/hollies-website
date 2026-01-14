@@ -363,3 +363,10 @@ h1, h2, p{
   animation: grain 0.3s steps(3) infinite;
 }
 
+.bag {
+    /* position: absolute;
+    height: 14vh;
+    left: 18vh;
+    top: 40.65vh; */
+}
+

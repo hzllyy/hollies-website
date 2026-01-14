@@ -45,6 +45,7 @@ let summaryHobbiesHidden = false;
 let start = false;
 let rectLeft = null;
 let rectTop = null
+let bagCreated = false;
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -272,16 +273,16 @@ window.addEventListener("scroll", () => {
     if (scrollTop > 5000 && !finalized) {
         finalized = true;
 
+        hideUIOpacity();
+
         removeWindow(designer, () => designer = null);
         removeWindow(developer, () => developer = null);
         removeWindow(creator, () => creator = null);
-
-        hideUIOpacity();
     }
 
     if (scrollTop <= 5000) {
-        finalized = false;
         showUIOpacity();
+        finalized = false;
     }
 
     if (scrollTop > 5500 && !aboutMeCreated) {
@@ -467,46 +468,61 @@ window.addEventListener("scroll", () => {
 
         const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
         const newWidth = originalWidth + (originalWidth * 1.65 * progress);
-        
-        // Update clone width
+
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
             clone.style.width = `${newWidth}px`;
             
-            // Get all elements
             const innerWindow = clone.querySelector('.aboutme-inner-window');
             const avatarImg = clone.querySelector('.avatar');
             const outfitSwitch = clone.querySelector('.outfit-switch');
             const belowHeader = clone.querySelector('.belowHeader');
             
             if (innerWindow && avatarImg && outfitSwitch && belowHeader) {
-                // Calculate stretch amount
-                const stretchAmount = newWidth - originalWidth;
-                
-                // Keep the flex container layout (buttons on right side)
                 belowHeader.style.display = 'flex';
                 belowHeader.style.alignItems = 'stretch';
                 
-                // Inner window stretches to fill space
                 innerWindow.style.flex = '1';
                 innerWindow.style.minWidth = '0';
                 innerWindow.style.display = 'flex';
                 innerWindow.style.justifyContent = 'center';
                 innerWindow.style.alignItems = 'center';
                 innerWindow.style.overflow = 'hidden';
+
+                const scale3 = ((1/1.5) + progress) * 1.5;
+                const scale4 = ((1/12)+ progress) * 12;
                 
-                // Avatar stays fixed size
                 avatarImg.style.width = 'auto';
-                avatarImg.style.maxWidth = '75vh';
                 avatarImg.style.flexShrink = '0';
+                avatarImg.style.transform = `translateY(${scale4}%) scale(${scale3})`;
                 
-                // Outfit switch buttons stay on right, maintain size
                 outfitSwitch.style.flexShrink = '0';
                 outfitSwitch.style.width = 'auto';
                 outfitSwitch.style.display = 'flex';
                 outfitSwitch.style.flexDirection = 'column';
                 outfitSwitch.style.justifyContent = 'start';
-                outfitSwitch.style.padding = '0 2vh';
+
+           if (!bagCreated) {
+                const bag = document.createElement('img');
+                bag.src = '/images/bag.PNG';
+                bag.alt = 'bag';
+                bag.className = 'bag';
+                
+                innerWindow.appendChild(bag);
+                
+                bag.style.position = 'absolute';
+                bag.style.pointerEvents = 'none';
+                bag.style.height = '14vh';
+                
+                console.log('bag created');
+                bagCreated = true;
+            }
+
+            const bag = innerWindow.querySelector('.bag');
+            if (bag) {
+                bag.style.transform = `translateY(${scale4}%) scale(${scale3})`;
+                bag.style.transformOrigin = 'center center';
+            }
                 
             }
         }
@@ -622,6 +638,7 @@ window.addEventListener("scroll", () => {
         delete avatarWindowEl.dataset.originalWidth;
         delete avatarWindowEl.dataset.clone;
         start = false;
+        bagCreated = false;
     }
 
     }
