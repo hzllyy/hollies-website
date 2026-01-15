@@ -509,8 +509,9 @@ window.addEventListener("scroll", () => {
 
                 const scale3 = ((1/1.5) + progress) * 1.5;
                 const scale4 = ((1/12)+ progress) * 12;
-                const scale5 = ((1/5)+ progress) * 5;
-                
+                const scale5 = ((1/0.06)+ progress) * 0.06;
+                const scale6 = ((1/22) + progress) * (-22);
+                 
                 avatarImg.style.width = 'auto';
                 avatarImg.style.flexShrink = '0';
                 avatarImg.style.transform = `translateY(${scale4}%) scale(${scale3})`;
@@ -521,7 +522,7 @@ window.addEventListener("scroll", () => {
                 outfitSwitch.style.flexDirection = 'column';
                 outfitSwitch.style.justifyContent = 'start';
 
-                        if (!notebookCreated) {
+            if (!notebookCreated) {
                 const notebook = document.createElement('img');
                 notebook.src = '/images/project-notebook-unselected.PNG';
                 notebook.alt = 'project-notebook';
@@ -538,7 +539,7 @@ window.addEventListener("scroll", () => {
 
             const notebook = innerWindow.querySelector('.notebook');
             if (notebook) {
-                notebook.style.transform = `translateY(${scale5}%) scale(${scale3})`;
+                notebook.style.transform = `translateX(${scale6}%) translateY(${scale5}%) scale(${scale3})`;
                 notebook.style.transformOrigin = 'center center';
             }
 
@@ -616,6 +617,27 @@ window.addEventListener("scroll", () => {
                 outfitSwitch.style.flexShrink = '0';
                 outfitSwitch.style.width = 'auto';
             }
+
+            // notebook select
+            const notebookHoverArea = document.createElement('div');
+            notebookHoverArea.className = 'notebook-hover-area';
+            notebookHoverArea.style.position = 'absolute';
+            notebookHoverArea.style.cursor = 'pointer';
+
+            notebookHoverArea.style.width = '20%';
+            notebookHoverArea.style.height = '19%';
+            notebookHoverArea.style.left = '45%';
+
+            innerWindow.appendChild(notebookHoverArea);
+
+            const notebook = clone.querySelector('.notebook');
+            notebookHoverArea.addEventListener('mouseover', () => {
+                notebook.src = '/images/project-notebook-selected.PNG';
+            })
+
+            notebookHoverArea.addEventListener('mouseout', () => {
+                notebook.src = '/images/project-notebook-unselected.PNG';
+            })
         }
     }
 
