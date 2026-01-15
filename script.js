@@ -47,6 +47,7 @@ let start = false;
 let rectLeft = null;
 let rectTop = null
 let bagCreated = false;
+let notebookCreated = false;
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -508,6 +509,7 @@ window.addEventListener("scroll", () => {
 
                 const scale3 = ((1/1.5) + progress) * 1.5;
                 const scale4 = ((1/12)+ progress) * 12;
+                const scale5 = ((1/5)+ progress) * 5;
                 
                 avatarImg.style.width = 'auto';
                 avatarImg.style.flexShrink = '0';
@@ -518,6 +520,27 @@ window.addEventListener("scroll", () => {
                 outfitSwitch.style.display = 'flex';
                 outfitSwitch.style.flexDirection = 'column';
                 outfitSwitch.style.justifyContent = 'start';
+
+                        if (!notebookCreated) {
+                const notebook = document.createElement('img');
+                notebook.src = '/images/project-notebook-unselected.PNG';
+                notebook.alt = 'project-notebook';
+                notebook.className = 'notebook';
+                
+                innerWindow.appendChild(notebook);
+                
+                notebook.style.position = 'absolute';
+                notebook.style.height = '75vh';
+                
+                console.log('notebook created');
+                notebookCreated = true;
+            }
+
+            const notebook = innerWindow.querySelector('.notebook');
+            if (notebook) {
+                notebook.style.transform = `translateY(${scale5}%) scale(${scale3})`;
+                notebook.style.transformOrigin = 'center center';
+            }
 
            if (!bagCreated) {
                 const bag = document.createElement('img');
@@ -656,6 +679,7 @@ window.addEventListener("scroll", () => {
         delete avatarWindowEl.dataset.clone;
         start = false;
         bagCreated = false;
+        notebookCreated = false;
     }
 
     }
