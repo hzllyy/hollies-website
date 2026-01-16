@@ -100,25 +100,36 @@ body {
     display: none;
 }
 
-.designer {
+.popup-div {
     position: fixed;
-    height: 60vh;
-    top: 27vh;
-    left: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    top: 34vh;
+    width: 104vh;
+    height: 57vh;
+    
+}
+
+.designer {
+    position: absolute;
+    height: 50vh;
+    top: 0;
+    left: 0;
 }
 
 .developer {
-    position: fixed;
-    height: 64vh;
-    top: 34vh;
-    left: 45%;
+    position: absolute;
+    height: 54vh;
+    bottom: 0;
+    right: 0;
 }
 
 .creator {
-    position: fixed;
+    position: absolute;
     height: 55vh;
-    top: 47vh;
-    left: 30%;
+    top: 12vh;
+    left: 15%;
 }
 
 .zoom-out {
@@ -319,11 +330,11 @@ h1, h2, p{
 .outfit-switch button {
     margin-bottom: 1vh;
     border: 2px solid black;
-    height: 5vh;
-    width: 5vh;
+    height: 6vh;
+    width: 6vh;
     border-radius: 5px;
     background-color: #FF98CD;
-    font-size: 25px;
+    font-size: 2.4vh;
 }
 
 .outfit-switch button:hover {

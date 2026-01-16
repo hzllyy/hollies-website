@@ -203,6 +203,12 @@ window.addEventListener("scroll", () => {
         const fade = (scrollTop - 2500) / 1000;
         header.style.opacity = Math.max(1 - fade, 0);
         iama.style.opacity = Math.min(fade, 1);
+
+        // create popup div
+        const popupDiv = document.createElement('div');
+        popupDiv.className = 'popup-div';
+
+        document.body.appendChild(popupDiv);
     }
 
     // pop up windows for iama!
@@ -215,7 +221,8 @@ window.addEventListener("scroll", () => {
         designer.setAttribute('data-aos-duration', '300'); 
         designer.setAttribute('data-aos-once', 'true');
 
-        document.body.appendChild(designer);
+        const popupDiv = document.querySelector('.popup-div');
+        popupDiv.appendChild(designer);
     } 
 
     if (scrollTop > 4000 && scrollTop < 5000 && !developer) {
@@ -227,7 +234,8 @@ window.addEventListener("scroll", () => {
         developer.setAttribute('data-aos-duration', '300'); 
         developer.setAttribute('data-aos-once', 'true');
 
-        document.body.appendChild(developer);
+        const popupDiv = document.querySelector('.popup-div');
+        popupDiv.appendChild(developer);
     }
 
     if (scrollTop > 4500 && scrollTop < 5000 && !creator) {
@@ -239,7 +247,8 @@ window.addEventListener("scroll", () => {
         creator.setAttribute('data-aos-duration', '300'); 
         creator.setAttribute('data-aos-once', 'true');
 
-        document.body.appendChild(creator);
+        const popupDiv = document.querySelector('.popup-div');
+        popupDiv.appendChild(creator);
     }
 
     // helper function to remove dynamic windows
