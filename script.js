@@ -31,6 +31,7 @@ let designer = null;
 let developer = null;
 let creator = null;
 let finalized = false;
+let popupCreated = false;
 
 let blinkInterval = null;
 let currentOutfit = 'default';
@@ -48,6 +49,14 @@ let rectLeft = null;
 let rectTop = null
 let bagCreated = false;
 let notebookCreated = false;
+
+// check for project
+let projectSelected = false;
+const numPages = 3;
+let coverPage = true;
+let backCover = false;
+let openBook = false;
+let pageNum = 0;
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -205,10 +214,13 @@ window.addEventListener("scroll", () => {
         iama.style.opacity = Math.min(fade, 1);
 
         // create popup div
-        const popupDiv = document.createElement('div');
-        popupDiv.className = 'popup-div';
+        if (!popupCreated) {
+            const popupDiv = document.createElement('div');
+            popupDiv.className = 'popup-div';
 
-        document.body.appendChild(popupDiv);
+            document.body.appendChild(popupDiv);
+            popupCreated = true;
+        }
     }
 
     // pop up windows for iama!
@@ -300,11 +312,20 @@ window.addEventListener("scroll", () => {
         removeWindow(designer, () => designer = null);
         removeWindow(developer, () => developer = null);
         removeWindow(creator, () => creator = null);
+        
+        const popupDiv = document.querySelector('.popup-div');
+        popupDiv.style.zIndex = '-9999';
     }
 
     if (scrollTop <= 5000) {
         showUIOpacity();
         finalized = false;
+
+        if (popupCreated) {
+            const popupDiv = document.querySelector('.popup-div');
+            popupDiv.style.zIndex = '9999';
+        }
+
     }
 
     // create about me windows!
@@ -467,7 +488,7 @@ window.addEventListener("scroll", () => {
             clone.style.left = `${rect.left}px`;
             clone.style.top = `${rect.top}px`;
             clone.style.width = `${avatarWindowEl.offsetWidth}px`;
-            clone.style.zIndex = '1000';
+            clone.style.zIndex = '10';
             
             // start blinking on clone
             const clonedAvatarImg = clone.querySelector('.avatar');
@@ -494,7 +515,7 @@ window.addEventListener("scroll", () => {
         }
 
         const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-        const newWidth = originalWidth + (originalWidth * 1.65 * progress);
+        const newWidth = originalWidth + (originalWidth * 1.55 * progress);
 
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
@@ -583,11 +604,11 @@ window.addEventListener("scroll", () => {
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
             if (!avatarWindowEl.dataset.originalWidth) {
-                avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.65;
+                avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.55;
             }
             
             const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-            const newWidth = originalWidth * 2.65;
+            const newWidth = originalWidth * 2.55;
             
             clone.style.width = `${newWidth}px`;
             
@@ -648,6 +669,10 @@ window.addEventListener("scroll", () => {
                 notebook.src = '/images/project-notebook-unselected.PNG';
             })
         }
+
+        const viewProject = document.querySelector('.projects-view');
+        viewProject.style.display = 'block';
+        projectSelected = true;
     }
 
     if (scrollTop <= 6000 && avatarWindowEl) {
@@ -713,5 +738,56 @@ window.addEventListener("scroll", () => {
         notebookCreated = false;
     }
 
+    if (projectSelected) {
+        console.log('project selected');
+        const leftBtn = document.querySelector('.left-btn');
+        const rightBtn = document.querySelector('.right-btn');
+
+        const projectBookImg = document.querySelector('.book')
+
+        if (coverPage) {
+            rightBtn.addEventListener('click', () => {
+                projectBookImg.src = 'images/open_book.PNG';
+                coverPage = false;
+                openBook = true;
+                leftBtn.classList.remove('.disabled');
+            })
+        }
+
+        if (openBook) {
+            leftBtn.addEventListener('mouseover', () => {
+                projectBookImg.src = 'images/left_turn.PNG';
+            })
+
+            rightBtn.addEventListener('mouseover', () => {
+                projectBookImg.src = 'images/right_turn.PNG';
+            })
+
+            leftBtn.addEventListener('click', () => {
+                pageNum--;
+            })
+
+            rightBtn.addEventListener('click', () => {
+                pageNum++; 
+            })
+
+            if (pageNum === numPages) {
+                openBook = false;
+                backCover = true;
+            }
+
+        }
+
+        if (backCover) {
+            leftBtn.addEventListener('click', () => {
+                projectBookImg.src = 'images/open_book.PNG';
+                backCover = false;
+                rightBtn.classList.add('.disabled');
+            })
+        }
+
     }
+
+    }
+
 );
