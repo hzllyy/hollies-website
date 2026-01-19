@@ -59,6 +59,9 @@ let openBook = false;
 let pageNum = 0;
 let bookListenersSetup = false;
 
+// contact card
+let contactCreated = false;
+
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
     if (blinkInterval) {
@@ -645,7 +648,7 @@ window.addEventListener("scroll", () => {
     }
 
     // scroll past avatar zoom 
-    if (scrollTop > 7000 && avatarWindowEl) {
+    if (scrollTop > 7000 && scrollTop <= 7500 && avatarWindowEl) {
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
             if (!avatarWindowEl.dataset.originalWidth) {
@@ -823,10 +826,6 @@ window.addEventListener("scroll", () => {
                 freshLeftBtn.classList.add('disabled');
             }
         })
-
-        if (openBook) {
-            
-        }
         // page flip effect
         freshRightBtn.addEventListener('mouseover', () => {
             if (openBook) {
@@ -858,6 +857,33 @@ window.addEventListener("scroll", () => {
             bookListenersSetup = false;
         })
     }
+
+    const contactForm = document.querySelector('#form');
+    const contactCard = document.querySelector('.lets-connect-wrapper');
+
+    contactForm.addEventListener('mouseenter', () => {
+    contactCard.classList.add('float-up');
+    });
+
+    contactForm.addEventListener('mouseleave', () => {
+    contactCard.classList.remove('float-up');
+    });
+
+
+    if (scrollTop > 7500) {
+        const clone = document.getElementById('avatar-window-clone');
+        if (clone) {
+            // stop blinking on the clone before removing
+            const clonedAvatarImg = clone.querySelector('.avatar');
+            if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
+                clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
+            }
+            clone.remove();
+        }
+        }
+        
     }
+    
+
 
 );

@@ -417,6 +417,53 @@ h1, h2, p{
     height: 95vh;
 }
 
+.contact-me {
+    position: relative;
+    height: 100vh;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    top: 9000px;
+}
+
+.contact-bg, .notecard, .envelope {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100vh;
+}
+
+.envelope {
+    pointer-events: none;
+}
+
+#form {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+
+    /* border: 2px solid red; */
+    cursor: pointer;
+    padding: 10vh 15vh;
+}
+
+.lets-connect-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease;
+}
+
+.lets-connect-wrapper.float-up {
+  transform: translate(-50%, calc(-50% - 100px));
+}
+
 .grain {
   position: fixed;
   top: 0;
