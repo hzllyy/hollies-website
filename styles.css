@@ -373,7 +373,7 @@ h1, h2, p{
     display: none;
 }
 
-.left-btn, .right-btn {
+.left-btn, .right-btn, .exit-btn {
     color: white;
     background-color: rgba(0, 0, 0, 0);
     border: none;
@@ -387,8 +387,16 @@ h1, h2, p{
     cursor: not-allowed;
 }
 
-.left-btn:hover, .right-btn:hover {
+.left-btn:hover, .right-btn:hover, .exit-btn:hover {
     transform: scale(1.2);
+}
+
+.exit-btn {
+    font-family: 'Arial';
+    font-size: 5vh;
+    position: absolute;
+    right: 5vh;
+    top: 2vh;
 }
 
 .disabled:hover {

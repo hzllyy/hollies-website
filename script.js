@@ -57,6 +57,7 @@ let coverPage = true;
 let backCover = false;
 let openBook = false;
 let pageNum = 0;
+let bookListenersSetup = false;
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -552,6 +553,12 @@ window.addEventListener("scroll", () => {
                 outfitSwitch.style.flexDirection = 'column';
                 outfitSwitch.style.justifyContent = 'start';
 
+            const notebook = innerWindow.querySelector('.notebook');
+            if (notebook) {
+                notebook.style.transform = `translateX(${scale6}%) translateY(${scale5}%) scale(${scale3})`;
+                notebook.style.transformOrigin = 'center center';
+            }
+
             if (!notebookCreated) {
                 const notebook = document.createElement('img');
                 notebook.src = '/images/project-notebook-unselected.PNG';
@@ -563,15 +570,53 @@ window.addEventListener("scroll", () => {
                 notebook.style.position = 'absolute';
                 notebook.style.height = '75vh';
                 
-                console.log('notebook created');
+                const notebookHoverArea = document.createElement('div');
+                notebookHoverArea.className = 'notebook-hover-area';
+                notebookHoverArea.style.position = 'absolute';
+                notebookHoverArea.style.cursor = 'pointer';
+                notebookHoverArea.style.width = '20%';
+                notebookHoverArea.style.height = '19%';
+                notebookHoverArea.style.left = '45%';
+                
+                innerWindow.appendChild(notebookHoverArea);
+                
+                notebookHoverArea.addEventListener('mouseover', () => {
+                    notebook.src = '/images/project-notebook-selected.PNG';
+                });
+                
+                notebookHoverArea.addEventListener('mouseout', () => {
+                    notebook.src = '/images/project-notebook-unselected.PNG';
+                });
+                
+                notebookHoverArea.addEventListener('click', () => {
+                    console.log('Notebook clicked!');
+                    const viewProject = document.querySelector('.projects-view');
+                    if (viewProject) {
+                        viewProject.style.display = 'block';
+                        projectSelected = true;
+                        coverPage = true;
+                        backCover = false;
+                        openBook = false;
+                        pageNum = 0;
+                        bookListenersSetup = false; 
+                        
+                        console.log('Project view shown, projectSelected:', projectSelected);
+                    } else {
+                        console.error('projects-view element not found!');
+                    }
+                });
+                
+                console.log('notebook and hover area created');
                 notebookCreated = true;
             }
 
-            const notebook = innerWindow.querySelector('.notebook');
-            if (notebook) {
+            const notebookHoverArea = innerWindow.querySelector('.notebook-hover-area');
+            if (notebook && notebookHoverArea) {
                 notebook.style.transform = `translateX(${scale6}%) translateY(${scale5}%) scale(${scale3})`;
-                notebook.style.transformOrigin = 'center center';
+                notebookHoverArea.style.transform = `translateX(${scale6}%) translateY(${scale5}%) scale(${scale3})`;
+                notebookHoverArea.style.transformOrigin = 'center center';
             }
+
 
            if (!bagCreated) {
                 const bag = document.createElement('img');
@@ -647,32 +692,7 @@ window.addEventListener("scroll", () => {
                 outfitSwitch.style.flexShrink = '0';
                 outfitSwitch.style.width = 'auto';
             }
-
-            // notebook select
-            const notebookHoverArea = document.createElement('div');
-            notebookHoverArea.className = 'notebook-hover-area';
-            notebookHoverArea.style.position = 'absolute';
-            notebookHoverArea.style.cursor = 'pointer';
-
-            notebookHoverArea.style.width = '20%';
-            notebookHoverArea.style.height = '19%';
-            notebookHoverArea.style.left = '45%';
-
-            innerWindow.appendChild(notebookHoverArea);
-
-            const notebook = clone.querySelector('.notebook');
-            notebookHoverArea.addEventListener('mouseover', () => {
-                notebook.src = '/images/project-notebook-selected.PNG';
-            })
-
-            notebookHoverArea.addEventListener('mouseout', () => {
-                notebook.src = '/images/project-notebook-unselected.PNG';
-            })
         }
-
-        const viewProject = document.querySelector('.projects-view');
-        viewProject.style.display = 'block';
-        projectSelected = true;
     }
 
     if (scrollTop <= 6000 && avatarWindowEl) {
@@ -738,56 +758,106 @@ window.addEventListener("scroll", () => {
         notebookCreated = false;
     }
 
-    if (projectSelected) {
+    if (projectSelected && !bookListenersSetup) {
         console.log('project selected');
         const leftBtn = document.querySelector('.left-btn');
         const rightBtn = document.querySelector('.right-btn');
+        const projectBookImg = document.querySelector('.book');
+        const projectView = document.querySelector('.projects-view')
+        const exitBtn = document.querySelector('.exit-btn')
 
-        const projectBookImg = document.querySelector('.book')
+        const newLeftBtn = leftBtn.cloneNode(true);
+        const newRightBtn = rightBtn.cloneNode(true);
+        leftBtn.parentNode.replaceChild(newLeftBtn, leftBtn);
+        rightBtn.parentNode.replaceChild(newRightBtn, rightBtn);
 
-        if (coverPage) {
-            rightBtn.addEventListener('click', () => {
+        const freshLeftBtn = document.querySelector('.left-btn');
+        const freshRightBtn = document.querySelector('.right-btn');
+
+        freshRightBtn.addEventListener('click', () => {
+            if (coverPage) {
                 projectBookImg.src = 'images/open_book.PNG';
                 coverPage = false;
                 openBook = true;
-                leftBtn.classList.remove('.disabled');
-            })
-        }
-
-        if (openBook) {
-            leftBtn.addEventListener('mouseover', () => {
-                projectBookImg.src = 'images/left_turn.PNG';
-            })
-
-            rightBtn.addEventListener('mouseover', () => {
-                projectBookImg.src = 'images/right_turn.PNG';
-            })
-
-            leftBtn.addEventListener('click', () => {
-                pageNum--;
-            })
-
-            rightBtn.addEventListener('click', () => {
-                pageNum++; 
-            })
-
-            if (pageNum === numPages) {
-                openBook = false;
-                backCover = true;
+                leftBtn.classList.remove('disabled');
+                console.log('Book opened, page', pageNum)
+            } else if (openBook && pageNum < numPages) {
+                pageNum++;
+                console.log('Turned to page:', pageNum)
             }
 
-        }
+            if (pageNum === numPages) {
+                projectBookImg.src = 'images/back_cover.PNG';
+                openBook = false;
+                backCover = true;
+                console.log('Reached the end');
+            }
 
-        if (backCover) {
-            leftBtn.addEventListener('click', () => {
+            freshLeftBtn.classList.remove('disabled');
+            if (pageNum === numPages) {
+                freshRightBtn.classList.add('disabled');
+            }
+        })
+
+        freshLeftBtn.addEventListener('click', () => {
+            if (backCover) {
                 projectBookImg.src = 'images/open_book.PNG';
                 backCover = false;
-                rightBtn.classList.add('.disabled');
-            })
+                openBook = true;
+                rightBtn.classList.remove('.disabled');
+                console.log('Book opened, page', pageNum)
+            } else if (openBook && pageNum > 0) {
+                pageNum--;
+                console.log('Turned to page:', pageNum)
+            }
+
+            if (pageNum === 0) {
+                projectBookImg.src = 'images/cover_page.PNG';
+                openBook = false;
+                coverPage = true;
+                console.log('Reached the beginning.');
+            }
+
+            freshRightBtn.classList.remove('disabled');
+            if (pageNum === 0) {
+                freshLeftBtn.classList.add('disabled');
+            }
+        })
+
+        if (openBook) {
+            
         }
+        // page flip effect
+        freshRightBtn.addEventListener('mouseover', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/right_turn.PNG';
+            }
+        })
 
+        freshRightBtn.addEventListener('mouseout', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/open_book.PNG';
+            }
+        })
+
+        freshLeftBtn.addEventListener('mouseover', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/left_turn.PNG';
+            }
+        })
+
+        freshLeftBtn.addEventListener('mouseout', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/open_book.PNG';
+            }
+        })
+
+        exitBtn.addEventListener('click', () => {
+            projectView.style.display = 'none';
+            projectSelected = false;
+            bookListenersSetup = false;
+        })
     }
-
     }
 
 );
