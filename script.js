@@ -64,6 +64,7 @@ let contactCreated = false;
 let cloneWindowHidden = false;
 let cloneShouldExist = false;
 let cloneVisibleRange = { start: 6000, end: 7200 };
+let notificationCreated = false;
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -172,6 +173,130 @@ function showWindowWithAnimation(windowEl) {
     windowEl.addEventListener('animationend', () => {
         windowEl.classList.remove('zoom-in');
     }, { once: true });
+}
+
+// create notification
+function createNotification() {
+    const projectNotification = document.createElement('img');
+    projectNotification.src = 'images/project_notification.png';
+    projectNotification.alt = 'notification';
+    projectNotification.className = 'notification';
+
+    const clone = document.getElementById('avatar-window-clone');
+    if (clone) {
+        clone.appendChild(projectNotification);
+    }
+}
+
+// helper function for project book logic
+function setupProjectBook() {
+    if (projectSelected && !bookListenersSetup) {
+        console.log('project selected');
+        const leftBtn = document.querySelector('.left-btn');
+        const rightBtn = document.querySelector('.right-btn');
+        const projectBookImg = document.querySelector('.book');
+        const projectView = document.querySelector('.projects-view')
+        const exitBtn = document.querySelector('.exit-btn')
+
+        const newLeftBtn = leftBtn.cloneNode(true);
+        const newRightBtn = rightBtn.cloneNode(true);
+        leftBtn.parentNode.replaceChild(newLeftBtn, leftBtn);
+        rightBtn.parentNode.replaceChild(newRightBtn, rightBtn);
+
+        const freshLeftBtn = document.querySelector('.left-btn');
+        const freshRightBtn = document.querySelector('.right-btn');
+
+        freshRightBtn.addEventListener('click', () => {
+            if (coverPage) {
+                projectBookImg.src = 'images/open_book.PNG';
+                coverPage = false;
+                openBook = true;
+                freshLeftBtn.classList.remove('disabled');
+                console.log('Book opened, page', pageNum)
+            } else if (openBook && pageNum < numPages) {
+                pageNum++;
+                console.log('Turned to page:', pageNum)
+            }
+
+            if (pageNum === numPages) {
+                projectBookImg.src = 'images/back_cover.PNG';
+                openBook = false;
+                backCover = true;
+                console.log('Reached the end');
+            }
+
+            freshLeftBtn.classList.remove('disabled');
+            if (pageNum === numPages) {
+                freshRightBtn.classList.add('disabled');
+            }
+        });
+
+        freshLeftBtn.addEventListener('click', () => {
+            if (backCover) {
+                projectBookImg.src = 'images/open_book.PNG';
+                backCover = false;
+                openBook = true;
+                freshRightBtn.classList.remove('disabled');
+                console.log('Book opened, page', pageNum)
+            } else if (openBook && pageNum > 0) {
+                pageNum--;
+                console.log('Turned to page:', pageNum)
+            }
+
+            if (pageNum === 0) {
+                projectBookImg.src = 'images/cover_page.PNG';
+                openBook = false;
+                coverPage = true;
+                console.log('Reached the beginning.');
+            }
+
+            freshRightBtn.classList.remove('disabled');
+            if (pageNum === 0) {
+                freshLeftBtn.classList.add('disabled');
+            }
+        });
+        // page flip effect
+        freshRightBtn.addEventListener('mouseover', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/right_turn.PNG';
+            }
+        });
+
+        freshRightBtn.addEventListener('mouseout', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/open_book.PNG';
+            }
+        });
+
+        freshLeftBtn.addEventListener('mouseover', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/left_turn.PNG';
+            }
+        });
+
+        freshLeftBtn.addEventListener('mouseout', () => {
+            if (openBook) {
+                projectBookImg.src = 'images/open_book.PNG';
+            }
+        });
+
+        exitBtn.addEventListener('click', () => {
+            document.body.style.overflow = '';
+            projectView.style.display = 'none';
+            projectSelected = false;
+            bookListenersSetup = false;
+            pageNum = 0;
+            projectBookImg.src = 'images/cover_page.PNG';
+            coverPage = true;
+            openBook = false;
+            backCover = false;
+
+            freshLeftBtn.classList.add('disabled');
+            freshRightBtn.classList.remove('disabled');
+        });
+
+        bookListenersSetup = true;
+    }
 }
 
 // SCROLL EVENTS START HERE
@@ -402,17 +527,41 @@ window.addEventListener("scroll", () => {
         // avatar animation
         startBlinking(avatar, 'default');
 
-        const aboutMeContent = document.createElement('h1');
-        aboutMeContent.textContent = 'About Me';
+        const aboutMeContent = document.createElement('div');
+        const aboutMeHeader = document.createElement('h1');
+        aboutMeHeader.textContent = 'Recent Technical Experience';
+        aboutMeContent.appendChild(aboutMeHeader);
 
-        summaryWindowEl = createWindow('summary-window-id', aboutMeContent, 'aboutme.txt', null);
+        const weeeDiv = document.createElement('div')
+        weeeDiv.className = 'resume-div';
+        const weeeHeader = document.createElement('h3');
+        weeeHeader.className = 'resume-header';
+        weeeHeader.textContent = 'Software Engineer @ Weee!'
+        weeeDiv.appendChild(weeeHeader);
+        const weeeFirstBullet = document.createElement('p');
+        weeeFirstBullet.textContent = 'Designed and shipped a CMS-like seasonal campaign system powering dynamic React storefronts and homepage modules via backend APIs and feature-flagged rollouts, enabling non-engineering teams to launch and iterate on high-traffic holiday campaigns without code changes while preserving site reliability.';
+        weeeHeader.appendChild(weeeFirstBullet);
+        aboutMeContent.appendChild(weeeDiv);
+
+        const FHDiv = document.createElement('div')
+        FHDiv.className = 'resume-div';
+        const FHHeader = document.createElement('h3');
+        FHHeader.className = 'resume-header';
+        FHHeader.textContent = 'Frontend Engineer @ Fourth & Hope'
+        FHDiv.appendChild(FHHeader);
+        const FHFirstBullet = document.createElement('p');
+        FHFirstBullet.textContent = 'Modernized and optimized a React platform by refactoring legacy components, improving routing and performance, implementing WCAG-compliant accessibility fixes, enhancing SEO and responsiveness, and translating design mockups into reusable components.';
+        FHHeader.appendChild(FHFirstBullet);
+        aboutMeContent.appendChild(FHDiv);
+
+        summaryWindowEl = createWindow('summary-window-id', aboutMeContent, 'experience.txt', null);
 
         const hobbyArray = [
-            { src: 'images/switch.PNG', label: 'gaming'},
-            { src: 'images/read.PNG', label: 'reading'},
-            { src: 'images/draw.PNG', label: 'drawing'},
-            { src: 'images/baking.PNG', label: 'baking'},
-            { src: 'images/dance.PNG', label: 'dancing'}
+            { src: 'images/html5.PNG', label: 'HTML5'},
+            { src: 'images/css3.PNG', label: 'CSS3'},
+            { src: 'images/js.PNG', label: 'JavaScript'},
+            { src: 'images/react.PNG', label: 'React'},
+            { src: 'images/nodejs.PNG', label: 'NodeJS'}
         ]
 
         const hobbies = document.createElement('div');
@@ -467,6 +616,7 @@ window.addEventListener("scroll", () => {
 
     if (scrollTop <= 6000 && summaryHobbiesHidden) {
         summaryHobbiesHidden = false;
+        cloneShouldExist = false;
         
         showWindowWithAnimation(summaryWindowEl);
         showWindowWithAnimation(hobbiesWindowEl);
@@ -597,18 +747,20 @@ window.addEventListener("scroll", () => {
                 });
                 
                 notebookHoverArea.addEventListener('click', () => {
-                    console.log('Notebook clicked!');
                     const viewProject = document.querySelector('.projects-view');
                     if (viewProject) {
                         viewProject.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
                         projectSelected = true;
                         coverPage = true;
                         backCover = false;
                         openBook = false;
-                        pageNum = 0;
                         bookListenersSetup = false; 
-                        
-                        console.log('Project view shown, projectSelected:', projectSelected);
+                        pageNum = 0;
+
+                        setTimeout(() => {
+                            setupProjectBook();
+                        }, 10);
                     } else {
                         console.error('projects-view element not found!');
                     }
@@ -652,11 +804,28 @@ window.addEventListener("scroll", () => {
         }
     }
 
+    if (scrollTop >= 6700 && !notificationCreated) {
+        console.log('notification created');
+        createNotification();
+        
+        const notification = document.querySelector('.notification');
+        showWindowWithAnimation(notification);
+        notificationCreated = true;
+    }
+
+    if (scrollTop < 6700 && notificationCreated) {
+        const notification = document.querySelector('.notification');
+        hideWindowWithAnimation(notification);
+        notificationCreated = false;
+    }
+
     // scroll past avatar zoom 
     if (scrollTop > 7000 && scrollTop <= 7200) {
         const clone = document.getElementById('avatar-window-clone');
         if (cloneWindowHidden) {
             showWindowWithAnimation(clone);
+            cloneShouldExist = true;
+            cloneWindowHidden = false;
         }
 
         if (clone && avatarWindowEl) {
@@ -773,100 +942,7 @@ window.addEventListener("scroll", () => {
     }
 
     if (projectSelected && !bookListenersSetup) {
-        console.log('project selected');
-        const leftBtn = document.querySelector('.left-btn');
-        const rightBtn = document.querySelector('.right-btn');
-        const projectBookImg = document.querySelector('.book');
-        const projectView = document.querySelector('.projects-view')
-        const exitBtn = document.querySelector('.exit-btn')
-
-        const newLeftBtn = leftBtn.cloneNode(true);
-        const newRightBtn = rightBtn.cloneNode(true);
-        leftBtn.parentNode.replaceChild(newLeftBtn, leftBtn);
-        rightBtn.parentNode.replaceChild(newRightBtn, rightBtn);
-
-        const freshLeftBtn = document.querySelector('.left-btn');
-        const freshRightBtn = document.querySelector('.right-btn');
-
-        freshRightBtn.addEventListener('click', () => {
-            if (coverPage) {
-                projectBookImg.src = 'images/open_book.PNG';
-                coverPage = false;
-                openBook = true;
-                leftBtn.classList.remove('disabled');
-                console.log('Book opened, page', pageNum)
-            } else if (openBook && pageNum < numPages) {
-                pageNum++;
-                console.log('Turned to page:', pageNum)
-            }
-
-            if (pageNum === numPages) {
-                projectBookImg.src = 'images/back_cover.PNG';
-                openBook = false;
-                backCover = true;
-                console.log('Reached the end');
-            }
-
-            freshLeftBtn.classList.remove('disabled');
-            if (pageNum === numPages) {
-                freshRightBtn.classList.add('disabled');
-            }
-        })
-
-        freshLeftBtn.addEventListener('click', () => {
-            if (backCover) {
-                projectBookImg.src = 'images/open_book.PNG';
-                backCover = false;
-                openBook = true;
-                rightBtn.classList.remove('.disabled');
-                console.log('Book opened, page', pageNum)
-            } else if (openBook && pageNum > 0) {
-                pageNum--;
-                console.log('Turned to page:', pageNum)
-            }
-
-            if (pageNum === 0) {
-                projectBookImg.src = 'images/cover_page.PNG';
-                openBook = false;
-                coverPage = true;
-                console.log('Reached the beginning.');
-            }
-
-            freshRightBtn.classList.remove('disabled');
-            if (pageNum === 0) {
-                freshLeftBtn.classList.add('disabled');
-            }
-        })
-        // page flip effect
-        freshRightBtn.addEventListener('mouseover', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/right_turn.PNG';
-            }
-        })
-
-        freshRightBtn.addEventListener('mouseout', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/open_book.PNG';
-            }
-        })
-
-        freshLeftBtn.addEventListener('mouseover', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/left_turn.PNG';
-            }
-        })
-
-        freshLeftBtn.addEventListener('mouseout', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/open_book.PNG';
-            }
-        })
-
-        exitBtn.addEventListener('click', () => {
-            projectView.style.display = 'none';
-            projectSelected = false;
-            bookListenersSetup = false;
-        })
+        setupProjectBook();
     }
 
     const contactForm = document.querySelector('#form');

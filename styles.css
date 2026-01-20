@@ -276,12 +276,12 @@ h1, h2, p{
 
 .hobbies-div {
     display: flex;
-    gap: 2vh;
-    padding: 3vh 2vh;
+    gap: 1vh;
+    padding: 2vh 2vh;
 }
 
 .hobbies-div img {
-    height: 10vh;
+    height: 12vh;
 }
 
 .hobbies-div img:hover {
@@ -424,7 +424,7 @@ h1, h2, p{
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    top: 8600px;
+    top: 8640px;
 }
 
 .contact-bg, .notecard, .envelope {
@@ -441,7 +441,7 @@ h1, h2, p{
 
 #form {
     position: absolute;
-    top: 100px;
+    top: 17vh;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -505,6 +505,7 @@ h1, h2, p{
 #form h1 {
     font-size: 3vh;
     color: #836c8c;
+    margin-bottom: 2%;
 }
 
 .lets-connect-wrapper {
@@ -517,6 +518,22 @@ h1, h2, p{
 
 .lets-connect-wrapper.float-up {
   transform: translate(-50%, calc(-50% - 140px));
+}
+
+.notification {
+    position: fixed;
+    z-index: 9999;
+    top: 36%;
+    left: 42%;
+    height: 5vh;
+    visibility: hidden;
+}
+
+.resume-div h3 {
+    font-family: 'Anonymous Pro';
+}
+.resume-div p {
+    font-size: 2vh;
 }
 
 .grain {
