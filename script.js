@@ -61,6 +61,9 @@ let bookListenersSetup = false;
 
 // contact card
 let contactCreated = false;
+let cloneWindowHidden = false;
+let cloneShouldExist = false;
+let cloneVisibleRange = { start: 6000, end: 7200 };
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -442,6 +445,7 @@ window.addEventListener("scroll", () => {
     // remove about me if scrolled up
     if (scrollTop <= 5500 && aboutMeCreated) {
         aboutMeCreated = false;
+        cloneShouldExist = false;
 
         if (blinkInterval) {
             clearInterval(blinkInterval);
@@ -471,6 +475,7 @@ window.addEventListener("scroll", () => {
     // PAIN IN THE ASS avatar window zoom ;-;
     if (scrollTop > 6000 && scrollTop <= 7000 && avatarWindowEl) {
         const progress = (scrollTop - 6000) / 1000;
+        cloneShouldExist = true;
 
         if (!start) {
             // stop blinking
@@ -648,9 +653,13 @@ window.addEventListener("scroll", () => {
     }
 
     // scroll past avatar zoom 
-    if (scrollTop > 7000 && scrollTop <= 7500 && avatarWindowEl) {
+    if (scrollTop > 7000 && scrollTop <= 7200) {
         const clone = document.getElementById('avatar-window-clone');
-        if (clone) {
+        if (cloneWindowHidden) {
+            showWindowWithAnimation(clone);
+        }
+
+        if (clone && avatarWindowEl) {
             if (!avatarWindowEl.dataset.originalWidth) {
                 avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.55;
             }
@@ -700,14 +709,16 @@ window.addEventListener("scroll", () => {
 
     if (scrollTop <= 6000 && avatarWindowEl) {
         // remove clone
-        const clone = document.getElementById('avatar-window-clone');
-        if (clone) {
-            // stop blinking on the clone before removing
-            const clonedAvatarImg = clone.querySelector('.avatar');
-            if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
-                clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
+        if (!cloneShouldExist) {
+            const clone = document.getElementById('avatar-window-clone');
+            if (clone) {
+                // stop blinking on the clone before removing
+                const clonedAvatarImg = clone.querySelector('.avatar');
+                if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
+                    clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
+                }
+                clone.remove();
             }
-            clone.remove();
         }
         
         // show og avatarwindow
@@ -869,21 +880,14 @@ window.addEventListener("scroll", () => {
     contactCard.classList.remove('float-up');
     });
 
-
-    if (scrollTop > 7500) {
+    if (scrollTop > 7200 && cloneShouldExist) {
         const clone = document.getElementById('avatar-window-clone');
-        if (clone) {
-            // stop blinking on the clone before removing
-            const clonedAvatarImg = clone.querySelector('.avatar');
-            if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
-                clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
-            }
-            clone.remove();
+        if (clone && !cloneWindowHidden) {
+            hideWindowWithAnimation(clone);
+            cloneWindowHidden = true;
         }
-        }
-        
-    }
-    
 
+    }      
+    }
 
 );

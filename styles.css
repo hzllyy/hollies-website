@@ -1,5 +1,5 @@
 body {
-    height: 10000px;
+    height: 9000px;
     overflow-x: hidden;
 }
 
@@ -424,7 +424,7 @@ h1, h2, p{
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    top: 9000px;
+    top: 8600px;
 }
 
 .contact-bg, .notecard, .envelope {
@@ -446,10 +446,65 @@ h1, h2, p{
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 3%;
 
-    /* border: 2px solid red; */
     cursor: pointer;
-    padding: 10vh 15vh;
+    width: 35vh;
+    height: 25vh;
+    padding: 10vh 10vh;
+
+    text-align: center;
+    font-family: 'Anonymous Pro';
+}
+
+.small {
+    border: none;
+    border-bottom: 1px solid;
+    border-color: #836c8c;
+    background-color: rgb(0, 0, 0, 0);
+    font-family: 'Anonymous Pro';
+    width: 100%;
+}
+
+#form input[type=text]:focus {
+    outline: none;
+}
+
+#message {
+    border: 1px solid #836c8c;
+    border-radius: 5px;
+    background-color: rgb(0,0,0,0);
+    font-family: 'Anonymous Pro';
+    resize: none;
+    margin-top: 2%;
+    width: 100%;
+}
+
+#message:focus {
+    outline: none;
+}
+
+#form input[type=submit] {
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: white;
+    width: 50%;
+    height: 20%;
+    font-family: 'Anonymous Pro';
+    color: #836c8c;
+    font-size: 2vh;
+    cursor: pointer;
+    margin-top: 3%;
+}
+
+#form input[type=submit]:hover {
+    transform: scale(1.1);
+}
+
+#form h1 {
+    font-size: 3vh;
+    color: #836c8c;
 }
 
 .lets-connect-wrapper {
@@ -461,7 +516,7 @@ h1, h2, p{
 }
 
 .lets-connect-wrapper.float-up {
-  transform: translate(-50%, calc(-50% - 100px));
+  transform: translate(-50%, calc(-50% - 140px));
 }
 
 .grain {
