@@ -983,9 +983,12 @@ document.getElementById('form').addEventListener('submit', async function(event)
         });
         
         if (response.ok) {
-            // document.getElementById('thankYouMessage').style.display = 'block';
-            // document.getElementById('form').reset();
-            console.log('Thank you for your submission');
+            document.querySelector('.sent-msg').style.display = 'block';
+            const exitBtn = document.querySelector('.msg-exit-btn');
+            exitBtn.addEventListener('click', () => {
+                document.querySelector('.sent-msg').style.display = 'none';
+            })
+            document.getElementById('form').reset();
         } else {
             alert('Something went wrong. Please try again.');
         }

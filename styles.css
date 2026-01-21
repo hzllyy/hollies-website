@@ -538,8 +538,37 @@ h1, h2, p{
 .resume-div h3 {
     font-family: 'Anonymous Pro';
 }
+
 .resume-div p {
     font-size: 2vh;
+}
+
+.sent-msg {
+    z-index: 99999;
+    position: fixed;
+    top: 58%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.sent-msg img {
+    border-radius: 15px;
+    height: 67vh;
+}
+
+.msg-exit-btn {
+    position: fixed;
+    top: -3%;
+    right: 4%;
+    font-size: 4vh;
+    font-family: Arial;
+    cursor: pointer;
+    color: #B9A8B6;
+}
+
+.msg-exit-btn:hover {
+    transform: scale(1.1);
 }
 
 .grain {
