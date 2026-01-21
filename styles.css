@@ -382,6 +382,10 @@ h1, h2, p{
     cursor: pointer;
 }
 
+.left-btn, .right-btn {
+    height: 50vh;
+}
+
 .disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -397,6 +401,7 @@ h1, h2, p{
     position: absolute;
     right: 5vh;
     top: 2vh;
+    z-index: 999;
 }
 
 .disabled:hover {
@@ -410,6 +415,7 @@ h1, h2, p{
     top: 50%;
     transform: translate(-50%, -50%);
     display: flex;
+    align-items: center;
     gap: 8vh;
 }
 

@@ -967,3 +967,29 @@ window.addEventListener("scroll", () => {
     }
 
 );
+
+document.getElementById('form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    try {
+        const response = await fetch('https://formspree.io/f/xwvvndgq', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            // document.getElementById('thankYouMessage').style.display = 'block';
+            // document.getElementById('form').reset();
+            console.log('Thank you for your submission');
+        } else {
+            alert('Something went wrong. Please try again.');
+        }
+    } catch (error) {
+        alert('Network error. Please try again.');
+    }
+});
