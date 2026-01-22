@@ -301,7 +301,6 @@ function setupProjectBook() {
 }
 
 // SCROLL EVENTS START HERE
-
 window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY;
     const computer = document.getElementById("bg");
@@ -574,7 +573,7 @@ window.addEventListener("scroll", () => {
             hobbies.appendChild(wrapper);
         })
 
-        hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'hobbies.jpg', null);
+        hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'skills.jpg', null);
 
         const element = avatarWindowEl;
         const rect = element.getBoundingClientRect();
@@ -668,7 +667,7 @@ window.addEventListener("scroll", () => {
         }
 
         const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-        const newWidth = originalWidth + (originalWidth * 1.55 * progress);
+        const newWidth = originalWidth + (originalWidth * 1.65 * progress);
 
         const clone = document.getElementById('avatar-window-clone');
         if (clone) {
@@ -771,7 +770,6 @@ window.addEventListener("scroll", () => {
                 notebookHoverArea.style.transformOrigin = 'center center';
             }
 
-
            if (!bagCreated) {
                 const bag = document.createElement('img');
                 bag.src = '/images/bag.PNG';
@@ -792,8 +790,7 @@ window.addEventListener("scroll", () => {
             if (bag) {
                 bag.style.transform = `translateY(${scale4}%) scale(${scale3})`;
                 bag.style.transformOrigin = 'center center';
-            }
-                
+            }  
             }
         }
     }
@@ -824,11 +821,11 @@ window.addEventListener("scroll", () => {
 
         if (clone && avatarWindowEl) {
             if (!avatarWindowEl.dataset.originalWidth) {
-                avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.55;
+                avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.65;
             }
             
             const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-            const newWidth = originalWidth * 2.55;
+            const newWidth = originalWidth * 2.65;
             
             clone.style.width = `${newWidth}px`;
             
@@ -962,6 +959,7 @@ window.addEventListener("scroll", () => {
 
 );
 
+// function to grab messages
 document.getElementById('form').addEventListener('submit', async function(event) {
     event.preventDefault();
     
