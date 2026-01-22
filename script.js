@@ -63,7 +63,7 @@ let bookListenersSetup = false;
 let contactCreated = false;
 let cloneWindowHidden = false;
 let cloneShouldExist = false;
-let cloneVisibleRange = { start: 6000, end: 7200 };
+let cloneVisibleRange = { start: 3600, end: 4600 };
 let notificationCreated = false;
 
 // function to handle blinking
@@ -191,7 +191,6 @@ function createNotification() {
 // helper function for project book logic
 function setupProjectBook() {
     if (projectSelected && !bookListenersSetup) {
-        console.log('project selected');
         const leftBtn = document.querySelector('.left-btn');
         const rightBtn = document.querySelector('.right-btn');
         const projectBookImg = document.querySelector('.book');
@@ -310,10 +309,10 @@ window.addEventListener("scroll", () => {
     const logo = document.getElementById('logo');
     const iama = document.getElementById('iama');
 
-    const scale = 1 + scrollTop / 900;
+    const scale = 1 + scrollTop / 600;
     const scale2 = 1 + scrollTop / 5000;
 
-    if (scrollTop <= 2500) {
+    if (scrollTop <= 1500) {
         computer.style.transform = `scale(${scale})`;
         header.style.transform = `translateY(${-(scale2 - 1) * 110}%) scale(${scale2})`;
         nwindow.style.transform = `translateY(${-(scale2 - 1) * 30}%) scale(${scale2})`;
@@ -330,18 +329,18 @@ window.addEventListener("scroll", () => {
     }
 
     // stretch out iama window
-    else if (scrollTop > 2500 && scrollTop <= 3500) {
-        let extra = scrollTop - 2500;
+    else if (scrollTop > 1500 && scrollTop <= 2100) {
+        let extra = scrollTop - 1500;
         const scale3 = 1 + extra / 1000;
-        nwindow.style.transform = `translateY(${frozenWindow - extra * 0.055}%) scale(${scaledWindow})`;
+        nwindow.style.transform = `translateY(${frozenWindow - extra * 0.08}%) scale(${scaledWindow})`;
         extender.style.transform = `translateY(${frozenExtend - extra * 0.04}%) scale(${scaledWindow})`;
         logo.style.transform = `translateY(${frozenLogo - extra * 0.048}%) scale(${scaledWindow})`;
         header.style.transform = `translateY(${frozenTitle - extra * 0.03}%) scale(${scaledWindow})`;
         iama.style.display = 'block';
-        iama.style.transform = `translateY(${-((1 + extra / 5000) - 1) * 550}%) scale(${scale3})`;
+        iama.style.transform = `translateY(${-((1 + extra / 5000) - 1) * 700}%) scale(${scale3})`;
 
         // fade the caption
-        const fade = (scrollTop - 2500) / 1000;
+        const fade = (scrollTop - 1500) / 600;
         header.style.opacity = Math.max(1 - fade, 0);
         iama.style.opacity = Math.min(fade, 1);
 
@@ -356,7 +355,7 @@ window.addEventListener("scroll", () => {
     }
 
     // pop up windows for iama!
-    else if (scrollTop > 3500 && scrollTop < 5000 && !designer) {
+    else if (scrollTop > 2100 && scrollTop < 3000 && !designer) {
         designer = document.createElement('img');
         designer.className = 'designer';
         designer.src = 'images/designer.png';
@@ -369,7 +368,7 @@ window.addEventListener("scroll", () => {
         popupDiv.appendChild(designer);
     } 
 
-    if (scrollTop > 4000 && scrollTop < 5000 && !developer) {
+    if (scrollTop > 2400 && scrollTop < 3000 && !developer) {
         developer = document.createElement('img');
         developer.className = 'developer';
         developer.src = 'images/developer.png';
@@ -382,7 +381,7 @@ window.addEventListener("scroll", () => {
         popupDiv.appendChild(developer);
     }
 
-    if (scrollTop > 4500 && scrollTop < 5000 && !creator) {
+    if (scrollTop > 2700 && scrollTop < 3000 && !creator) {
         creator = document.createElement('img');
         creator.className = 'creator';
         creator.src = 'images/creator.png';
@@ -422,21 +421,21 @@ window.addEventListener("scroll", () => {
     }
 
     // remove all windows when scrolling to about me
-    if (scrollTop <= 3500 && designer) {
+    if (scrollTop <= 2100 && designer) {
         removeWindow(designer, () => designer = null);
     }
 
-    if (scrollTop <= 4000 && developer) {
+    if (scrollTop <= 2400 && developer) {
         removeWindow(developer, () => developer = null);
     }
 
-    if (scrollTop <= 4500 && creator) {
+    if (scrollTop <= 2700 && creator) {
         removeWindow(creator, () => creator = null);
     }
 
     const staticUI = [nwindow, extender, logo, iama];
 
-    if (scrollTop > 5000 && !finalized) {
+    if (scrollTop > 3000 && !finalized) {
         finalized = true;
 
         hideUIOpacity();
@@ -449,7 +448,7 @@ window.addEventListener("scroll", () => {
         popupDiv.style.zIndex = '-9999';
     }
 
-    if (scrollTop <= 5000) {
+    if (scrollTop <= 3000) {
         showUIOpacity();
         finalized = false;
 
@@ -457,11 +456,10 @@ window.addEventListener("scroll", () => {
             const popupDiv = document.querySelector('.popup-div');
             popupDiv.style.zIndex = '9999';
         }
-
     }
 
     // create about me windows!
-    if (scrollTop > 5500 && !aboutMeCreated) {
+    if (scrollTop > 3300 && !aboutMeCreated) {
         aboutMeCreated = true;
 
         const avatar = document.createElement('img');
@@ -491,28 +489,22 @@ window.addEventListener("scroll", () => {
             fitButton.addEventListener('click', () => {
             currentOutfit = outfit;
             
-            // Check which avatar is currently visible (original or clone)
-            const isCloneVisible = scrollTop > 6000 && scrollTop <= 7000;
+            const isCloneVisible = scrollTop > 3600 && scrollTop <= 4200;
             
             if (isCloneVisible) {
-                // Update clone only (since it's the one visible)
                 const clone = document.getElementById('avatar-window-clone');
                 if (clone) {
                     const clonedAvatar = clone.querySelector('.avatar');
                     if (clonedAvatar) {
                         clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
-                        // Restart blinking with new outfit
                         startBlinking(clonedAvatar, outfit);
                     }
                 }
                 
-                // Also update the original (hidden) to keep it in sync
                 if (avatar) {
                     avatar.src = `images/${outfit}-avatar-open.PNG`;
-                    // Don't start blinking on original - it's hidden
                 }
             } else {
-                // Update original only (clone doesn't exist)
                 if (avatar) {
                     avatar.src = `images/${outfit}-avatar-open.PNG`;
                     startBlinking(avatar, outfit);
@@ -586,13 +578,13 @@ window.addEventListener("scroll", () => {
         const rect = element.getBoundingClientRect();
 
         console.log({
-            left: rect.left,        // Distance from left edge of viewport
-            top: rect.top,          // Distance from top edge of viewport
+            left: rect.left,        
+            top: rect.top,          
         });
     }
 
     // remove about me if scrolled up
-    if (scrollTop <= 5500 && aboutMeCreated) {
+    if (scrollTop <= 3300 && aboutMeCreated) {
         aboutMeCreated = false;
         cloneShouldExist = false;
 
@@ -607,14 +599,14 @@ window.addEventListener("scroll", () => {
     }
 
     // hide windows when scrolling past aboutme
-    if (scrollTop > 6000 && !summaryHobbiesHidden) {
+    if (scrollTop > 3600 && !summaryHobbiesHidden) {
         summaryHobbiesHidden = true;
         
         hideWindowWithAnimation(summaryWindowEl);
         hideWindowWithAnimation(hobbiesWindowEl);
     }
 
-    if (scrollTop <= 6000 && summaryHobbiesHidden) {
+    if (scrollTop <= 3600 && summaryHobbiesHidden) {
         summaryHobbiesHidden = false;
         cloneShouldExist = false;
         
@@ -623,8 +615,8 @@ window.addEventListener("scroll", () => {
     }
 
     // PAIN IN THE ASS avatar window zoom ;-;
-    if (scrollTop > 6000 && scrollTop <= 7000 && avatarWindowEl) {
-        const progress = (scrollTop - 6000) / 1000;
+    if (scrollTop > 3600 && scrollTop <= 4600 && avatarWindowEl) {
+        const progress = (scrollTop - 3600) / 1000;
         cloneShouldExist = true;
 
         if (!start) {
@@ -804,7 +796,7 @@ window.addEventListener("scroll", () => {
         }
     }
 
-    if (scrollTop >= 6700 && !notificationCreated) {
+    if (scrollTop >= 4400 && !notificationCreated) {
         console.log('notification created');
         createNotification();
         
@@ -813,14 +805,14 @@ window.addEventListener("scroll", () => {
         notificationCreated = true;
     }
 
-    if (scrollTop < 6700 && notificationCreated) {
+    if (scrollTop < 4400 && notificationCreated) {
         const notification = document.querySelector('.notification');
         hideWindowWithAnimation(notification);
         notificationCreated = false;
     }
 
     // scroll past avatar zoom 
-    if (scrollTop > 7000 && scrollTop <= 7200) {
+    if (scrollTop > 4600 && scrollTop <= 4800) {
         const clone = document.getElementById('avatar-window-clone');
         if (cloneWindowHidden) {
             showWindowWithAnimation(clone);
@@ -876,7 +868,7 @@ window.addEventListener("scroll", () => {
         }
     }
 
-    if (scrollTop <= 6000 && avatarWindowEl) {
+    if (scrollTop <= 3600 && avatarWindowEl) {
         // remove clone
         if (!cloneShouldExist) {
             const clone = document.getElementById('avatar-window-clone');
@@ -956,7 +948,7 @@ window.addEventListener("scroll", () => {
     contactCard.classList.remove('float-up');
     });
 
-    if (scrollTop > 7200 && cloneShouldExist) {
+    if (scrollTop > 4800 && cloneShouldExist) {
         const clone = document.getElementById('avatar-window-clone');
         if (clone && !cloneWindowHidden) {
             hideWindowWithAnimation(clone);

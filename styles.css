@@ -1,5 +1,5 @@
 body {
-    height: 9000px;
+    height: 6000px;
     overflow-x: hidden;
 }
 
@@ -430,7 +430,7 @@ h1, h2, p{
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    top: 8640px;
+    top: 6000px;
 }
 
 .contact-bg, .notecard, .envelope {
