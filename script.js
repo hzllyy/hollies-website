@@ -52,7 +52,7 @@ let notebookCreated = false;
 
 // check for project
 let projectSelected = false;
-const numPages = 3;
+const numPages = 4;
 let coverPage = true;
 let backCover = false;
 let openBook = false;
@@ -207,13 +207,14 @@ function setupProjectBook() {
 
         freshRightBtn.addEventListener('click', () => {
             if (coverPage) {
-                projectBookImg.src = 'images/open_book.PNG';
+                projectBookImg.src = 'images/page1.png';
                 coverPage = false;
                 openBook = true;
                 freshLeftBtn.classList.remove('disabled');
                 console.log('Book opened, page', pageNum)
             } else if (openBook && pageNum < numPages) {
                 pageNum++;
+                projectBookImg.src = `images/page${pageNum + 1}.png`
                 console.log('Turned to page:', pageNum)
             }
 
@@ -232,13 +233,14 @@ function setupProjectBook() {
 
         freshLeftBtn.addEventListener('click', () => {
             if (backCover) {
-                projectBookImg.src = 'images/open_book.PNG';
+                projectBookImg.src = 'images/page4.png';
                 backCover = false;
                 openBook = true;
                 freshRightBtn.classList.remove('disabled');
                 console.log('Book opened, page', pageNum)
             } else if (openBook && pageNum > 0) {
                 pageNum--;
+                projectBookImg.src = `images/page${pageNum}.png`
                 console.log('Turned to page:', pageNum)
             }
 
@@ -255,29 +257,29 @@ function setupProjectBook() {
             }
         });
         // page flip effect
-        freshRightBtn.addEventListener('mouseover', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/right_turn.PNG';
-            }
-        });
+        // freshRightBtn.addEventListener('mouseover', () => {
+        //     if (openBook) {
+        //         projectBookImg.src = 'images/right_turn.PNG';
+        //     }
+        // });
 
-        freshRightBtn.addEventListener('mouseout', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/open_book.PNG';
-            }
-        });
+        // freshRightBtn.addEventListener('mouseout', () => {
+        //     if (openBook) {
+        //         projectBookImg.src = 'images/open_book.PNG';
+        //     }
+        // });
 
-        freshLeftBtn.addEventListener('mouseover', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/left_turn.PNG';
-            }
-        });
+        // freshLeftBtn.addEventListener('mouseover', () => {
+        //     if (openBook) {
+        //         projectBookImg.src = 'images/left_turn.PNG';
+        //     }
+        // });
 
-        freshLeftBtn.addEventListener('mouseout', () => {
-            if (openBook) {
-                projectBookImg.src = 'images/open_book.PNG';
-            }
-        });
+        // freshLeftBtn.addEventListener('mouseout', () => {
+        //     if (openBook) {
+        //         projectBookImg.src = 'images/open_book.PNG';
+        //     }
+        // });
 
         exitBtn.addEventListener('click', () => {
             document.body.style.overflow = '';
