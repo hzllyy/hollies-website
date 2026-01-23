@@ -25,7 +25,7 @@ function isMobile() {
     const aspectRatio = window.innerWidth / window.innerHeight;
     const screenRatio = window.screen.width / window.screen.height;
 
-    const mobileRatio = { min: 0.44, max: 1.4};
+    const mobileRatio = { min: 0.44, max: 0.8};
 
     if (aspectRatio >= mobileRatio.min && aspectRatio <= mobileRatio.max ||
         screenRatio >= mobileRatio.min && screenRatio <= mobileRatio.max
@@ -326,22 +326,82 @@ if (currentMode === 'mobile') {
     computer.style.height = 'auto';
 
     const hiWrapper = document.querySelector('.hi-wrapper');
-    const bgWrapper = document.querySelector('.bg-wrapper')
     const hi = document.getElementById('hi');
     hi.src = 'images/mobile-hi.PNG';
-    hi.style.height = '20vh';
-    bgWrapper.appendChild(hiWrapper);
+    hi.style.height = '22vw';
     hiWrapper.style.zIndex = '9999';
-    hiWrapper.style.top = '20%';
-    hiWrapper.style.left = '48%';
-
+    hiWrapper.style.top = '35%';
+    hiWrapper.style.transform = 'translate(-50%, -50%)';
 
     const logo = document.getElementById('logo');
-    const window = document.getElementById('window');
+    const logoWrapper = document.querySelector('.logo-wrapper');
+    const nwindow = document.getElementById('window');
+    const nwindowWrapper = document.querySelector('.window-wrapper');
     const extender = document.getElementById('extend');
-    logo.style.display = 'none';
-    window.style.display = 'none';
-    extender.style.display = 'none';
+    const extenderWrapper= document.querySelector('.extender-wrapper');
+    logo.style.opacity = '0';
+    nwindow.style.opacity = '0';
+    extender.style.opacity = '0';
+
+    // mobile scroll events
+    window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const computer = document.getElementById("bg");
+        const iama = document.getElementById('iama');
+
+        const scale = 1 + scrollTop / 250;
+        const scale2 = 1 + scrollTop / 5000;
+        const scalehi = 1 + scrollTop / 1000;
+
+        if (scrollTop <= 1500) {
+            computer.style.transform = `scale(${scale})`;
+            hi.style.transform = `translateY(${-(scale2 - 1) * 200}%) scale(${scalehi})`;
+            nwindow.style.height = '60vw';
+            nwindowWrapper.style.top = '84vw';
+            nwindow.style.transform = `translateY(${-(scale2 - 1) * 30}%) scale(${scale2})`;
+            extender.style.height = '40.85vw';
+            extenderWrapper.style.top = '104vw';
+            extender.style.transform = `translateY(${-(scale2 - 1) * -2}%) scale(${scale2})`;
+            logo.style.height = '36vw';
+            logoWrapper.style.top = '93.55vw';
+            logo.style.transform = `translateY(${-(scale2 - 1) * 20}%) scale(${scale2})`;
+            iama.style.display = 'none';
+
+            // store final states
+            scaledWindow = Math.min(scale2, 2);
+            frozenWindow  = -(scale2 - 1) * 30; 
+            frozenExtend =  -(scale2 - 1) * -2;
+            frozenLogo = -(scale2 - 1) * 20;
+            frozenTitle = -(scale2 - 1) * 110;
+        }
+
+        const staticUI = [nwindow, extender, logo, iama];
+
+        // helper to show/hide using opacity instead of removing
+        function hideUIOpacity() {
+            staticUI.forEach(el => {
+                if (!el) return;
+                el.style.transition = 'opacity 0.4s ease';
+                el.style.opacity = '0';
+            });
+        }
+
+        function showUIOpacity() {
+            staticUI.forEach(el => {
+                if (!el) return;
+                el.style.transition = 'opacity 0.4s ease';
+                el.style.opacity = '1';
+            });
+        }
+
+        if (scrollTop >= 1100) {
+            showUIOpacity();
+        }
+
+        if (scrollTop < 1100) {
+            hideUIOpacity();
+        }
+    })
 
 } else {
     // SCROLL EVENTS START HERE
