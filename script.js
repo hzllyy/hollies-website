@@ -326,15 +326,15 @@ if (currentMode === 'mobile') {
     computer.style.height = 'auto';
 
     const hiWrapper = document.querySelector('.hi-wrapper');
+    const bgWrapper = document.querySelector('.bg-wrapper')
     const hi = document.getElementById('hi');
     hi.src = 'images/mobile-hi.PNG';
-    hi.style.height = '40vw';
-    hiWrapper.style.top = '13%'
+    hi.style.height = '20vh';
+    bgWrapper.appendChild(hiWrapper);
+    hiWrapper.style.zIndex = '9999';
+    hiWrapper.style.top = '20%';
     hiWrapper.style.left = '48%';
-    hiWrapper.style.transform = 'translate(-50%, 50%)'
-    // top: -20vh;
-    // left: 50%;
-    // transform: translateX(-50%);
+
 
     const logo = document.getElementById('logo');
     const window = document.getElementById('window');
