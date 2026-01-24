@@ -40,6 +40,7 @@ let currentMode = isMobile() ? 'mobile' : 'desktop';
 
 // initialize values
 let scaledWindow = 1 + Math.min(window.scrollY, 2500) / 5000;
+let scaledHi = 0;
 let frozenWindow = 0;
 let frozenExtend = 0;
 let frozenLogo = 0;
@@ -83,6 +84,8 @@ let cloneWindowHidden = false;
 let cloneShouldExist = false;
 let cloneVisibleRange = { start: 3600, end: 4600 };
 let notificationCreated = false;
+
+let scrolledPast = false;
 
 // function to handle blinking
 function startBlinking(avatarElement, outfit = 'default') {
@@ -340,8 +343,13 @@ if (currentMode === 'mobile') {
     const extender = document.getElementById('extend');
     const extenderWrapper= document.querySelector('.extender-wrapper');
     logo.style.opacity = '0';
+    logo.style.visibility = 'hidden';
     nwindow.style.opacity = '0';
+    nwindow.style.visibility = 'hidden';
     extender.style.opacity = '0';
+    extender.style.visibility = 'hidden';
+
+    let hasShownUI = false;
 
     // mobile scroll events
     window.addEventListener("scroll", () => {
@@ -351,46 +359,51 @@ if (currentMode === 'mobile') {
 
         const scale = 1 + scrollTop / 250;
         const scale2 = 1 + scrollTop / 5000;
-        const scalehi = 1 + scrollTop / 1000;
+        const scalehi = 1 + scrollTop / 800;
 
         if (scrollTop <= 1500) {
             computer.style.transform = `scale(${scale})`;
-            hi.style.transform = `translateY(${-(scale2 - 1) * 200}%) scale(${scalehi})`;
-            nwindow.style.height = '60vw';
+            hi.style.transform = `translateY(${-(scale2 - 1) * 300}%) scale(${scalehi})`;
+            nwindow.style.height = '72vw';
             nwindowWrapper.style.top = '84vw';
-            nwindow.style.transform = `translateY(${-(scale2 - 1) * 30}%) scale(${scale2})`;
-            extender.style.height = '40.85vw';
-            extenderWrapper.style.top = '104vw';
-            extender.style.transform = `translateY(${-(scale2 - 1) * -2}%) scale(${scale2})`;
-            logo.style.height = '36vw';
-            logoWrapper.style.top = '93.55vw';
-            logo.style.transform = `translateY(${-(scale2 - 1) * 20}%) scale(${scale2})`;
+            extender.style.height = '49vw';
+            extenderWrapper.style.top = '110vw';
+            logo.style.height = '45vw';
+            logoWrapper.style.top = '96vw';
             iama.style.display = 'none';
 
             // store final states
-            scaledWindow = Math.min(scale2, 2);
-            frozenWindow  = -(scale2 - 1) * 30; 
-            frozenExtend =  -(scale2 - 1) * -2;
-            frozenLogo = -(scale2 - 1) * 20;
-            frozenTitle = -(scale2 - 1) * 110;
+            scaledHi = scalehi;
+            frozenTitle = -(scale2 - 1) * 300;
         }
 
         const staticUI = [nwindow, extender, logo, iama];
 
-        // helper to show/hide using opacity instead of removing
         function hideUIOpacity() {
             staticUI.forEach(el => {
                 if (!el) return;
-                el.style.transition = 'opacity 0.4s ease';
-                el.style.opacity = '0';
+                if (hasShownUI && !scrolledPast) {
+                    el.classList.remove('zoom-in');
+                    el.classList.add('zoom-out');
+                }
+                    el.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
+                    el.style.opacity = '0';
+                    el.style.visibility = 'hidden';
+                
             });
         }
 
         function showUIOpacity() {
             staticUI.forEach(el => {
                 if (!el) return;
+                hasShownUI = true;
+                if (!scrolledPast) {
+                    el.classList.remove('zoom-out');
+                    el.classList.add('zoom-in');
+                }
                 el.style.transition = 'opacity 0.4s ease';
                 el.style.opacity = '1';
+                el.style.visibility = 'visible';
             });
         }
 
@@ -400,6 +413,133 @@ if (currentMode === 'mobile') {
 
         if (scrollTop < 1100) {
             hideUIOpacity();
+            scrolledPast = false;
+        }
+
+        if (scrollTop > 1500 && scrollTop <= 2100) {
+            scrolledPast = true;
+            let extra = scrollTop - 1500;
+            let progress = (scrollTop - 1500) / 1000;
+            const scale3 = 1 + extra / 1000;
+
+            const iamaWrapper = document.querySelector('.iama-wrapper');
+
+            nwindow.style.transition = 'none';
+            extender.style.transition = 'none';
+            logo.style.transition = 'none';
+            iama.style.transition = 'none';
+
+            nwindow.classList.remove('zoom-in', 'zoom-out');
+            extender.classList.remove('zoom-in', 'zoom-out');
+            logo.classList.remove('zoom-in', 'zoom-out');
+            iama.classList.remove('zoom-in', 'zoom-out');
+
+            nwindow.style.transform = `translateY(${-(1/120 + progress) * 120}%)`;
+            extender.style.transform = `translateY(${-(1/120 + progress) * 120}%)`;
+            logo.style.transform = `translateY(${-(1/130 + progress) * 130}%)`;
+            hi.style.transform = `translateY(${frozenTitle - extra * 0.3}%) scale(${scaledHi - (0.875 * progress)})`;
+            iama.style.display = 'block';
+            iama.style.height = '30vw';
+            iamaWrapper.style.top = '90vw';
+            iama.style.transform = `translateY(${-((1 + extra / 5000) - 1) * 1200}%) scale(${scale3})`;
+
+            // fade the caption
+            const fade = (scrollTop - 1500) / 600;
+            hi.style.opacity = Math.max(1 - fade, 0);
+            iama.style.opacity = Math.min(fade, 1);
+
+            // create popup div
+            if (!popupCreated) {
+                const popupDiv = document.createElement('div');
+                popupDiv.className = 'popup-div-notif';
+
+                document.body.appendChild(popupDiv);
+                popupCreated = true;
+            }
+        }
+
+        // pop up windows for iama!
+        else if (scrollTop > 2100 && scrollTop < 3000 && !designer) {
+            designer = document.createElement('img');
+            designer.className = 'notif-designer';
+            designer.src = 'images/notif-designer.png';
+
+            designer.setAttribute('data-aos', 'zoom-in');
+            designer.setAttribute('data-aos-duration', '300'); 
+            designer.setAttribute('data-aos-once', 'true');
+
+            const popupDiv = document.querySelector('.popup-div-notif');
+            popupDiv.appendChild(designer);
+        } 
+
+        if (scrollTop > 2400 && scrollTop < 3000 && !developer) {
+            developer = document.createElement('img');
+            developer.className = 'notif-developer';
+            developer.src = 'images/notif-developer.png';
+
+            developer.setAttribute('data-aos', 'zoom-in');
+            developer.setAttribute('data-aos-duration', '300'); 
+            developer.setAttribute('data-aos-once', 'true');
+
+            const popupDiv = document.querySelector('.popup-div-notif');
+            popupDiv.appendChild(developer);
+        }
+
+        if (scrollTop > 2700 && scrollTop < 3000 && !creator) {
+            creator = document.createElement('img');
+            creator.className = 'notif-creator';
+            creator.src = 'images/notif-creator.png';
+
+            creator.setAttribute('data-aos', 'zoom-in');
+            creator.setAttribute('data-aos-duration', '300'); 
+            creator.setAttribute('data-aos-once', 'true');
+
+            const popupDiv = document.querySelector('.popup-div-notif');
+            popupDiv.appendChild(creator);
+        }
+
+        // helper function to remove dynamic windows
+        function removeWindow(el, clearRef) {
+            el.classList.add('zoom-out');
+            el.addEventListener('animationend', () => {
+                el.remove();
+                clearRef();
+            }, { once: true });
+        }
+
+                if (scrollTop <= 2100 && designer) {
+            removeWindow(designer, () => designer = null);
+        }
+
+        if (scrollTop <= 2400 && developer) {
+            removeWindow(developer, () => developer = null);
+        }
+
+        if (scrollTop <= 2700 && creator) {
+            removeWindow(creator, () => creator = null);
+        }
+
+        if (scrollTop > 3000 && !finalized) {
+            finalized = true;
+
+            hideUIOpacity();
+
+            removeWindow(designer, () => designer = null);
+            removeWindow(developer, () => developer = null);
+            removeWindow(creator, () => creator = null);
+            
+            const popupDiv = document.querySelector('.popup-div-notif');
+            popupDiv.style.zIndex = '-9999';
+        }
+
+        if (scrollTop <= 3000) {
+            showUIOpacity();
+            finalized = false;
+
+            if (popupCreated) {
+                const popupDiv = document.querySelector('.popup-div-notif');
+                popupDiv.style.zIndex = '9999';
+            }
         }
     })
 
@@ -1060,7 +1200,6 @@ if (currentMode === 'mobile') {
 
         }      
         }
-
     );
 }
 

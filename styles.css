@@ -108,7 +108,17 @@ body {
     top: 34vh;
     width: 104vh;
     height: 57vh;
-    
+}
+
+.popup-div-notif {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 3px solid red;
+
+    top: 34vh;
+    width: 80vw;
+    height: 57vh;
 }
 
 .designer {
@@ -118,6 +128,10 @@ body {
     left: 0;
 }
 
+.notif-designer {
+    width: 100%;
+}
+
 .developer {
     position: absolute;
     height: 54vh;
@@ -125,11 +139,19 @@ body {
     right: 0;
 }
 
+.notif-developer {
+    width: 100%;
+}
+
 .creator {
     position: absolute;
     height: 55vh;
     top: 12vh;
     left: 15%;
+}
+
+.notif-creator {
+    width: 100%;
 }
 
 .zoom-out {
