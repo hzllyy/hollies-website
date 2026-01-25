@@ -114,11 +114,9 @@ body {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    border: 3px solid red;
 
-    top: 34vh;
-    width: 80vw;
-    height: 57vh;
+    bottom: 10vw;
+    width: 75vw;
 }
 
 .designer {
@@ -130,6 +128,7 @@ body {
 
 .notif-designer {
     width: 100%;
+    margin-bottom: 2%;
 }
 
 .developer {
@@ -141,6 +140,7 @@ body {
 
 .notif-developer {
     width: 100%;
+    margin-bottom: 2%;
 }
 
 .creator {
@@ -279,6 +279,10 @@ body {
     height: 75vh;
 }
 
+.avatar-mobile {
+    height: 120vw;
+}
+
 .nav-btns {
     display: flex;
     flex-direction: row;
@@ -325,6 +329,24 @@ h1, h2, p{
     grid-template-rows: 1fr 1fr 1fr;
     gap: 2vh;
     overflow: visible;
+}
+
+.about-me-mobile {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.about-me-mobile h1 {
+    font-size: 6vw;
+}
+
+.about-me-mobile h3 {
+    font-size: 5vw;
+}
+
+.about-me-mobile p {
+    font-size: 4vw !important;
 }
 
 #avatar-window-id {

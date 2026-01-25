@@ -56,6 +56,9 @@ let blinkInterval = null;
 let currentOutfit = 'default';
 
 let aboutMeCreated = false;
+let aboutMeSummaryCreated = false;
+let aboutMeExpCreated = false;
+let aboutMeAvatarCreated = false;
 let avatarWindowEl = null;
 let summaryWindowEl = null;
 let hobbiesWindowEl = null;
@@ -359,7 +362,7 @@ if (currentMode === 'mobile') {
 
         const scale = 1 + scrollTop / 250;
         const scale2 = 1 + scrollTop / 5000;
-        const scalehi = 1 + scrollTop / 800;
+        const scalehi = 1 + scrollTop / 900;
 
         if (scrollTop <= 1500) {
             computer.style.transform = `scale(${scale})`;
@@ -389,7 +392,6 @@ if (currentMode === 'mobile') {
                     el.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
                     el.style.opacity = '0';
                     el.style.visibility = 'hidden';
-                
             });
         }
 
@@ -407,11 +409,11 @@ if (currentMode === 'mobile') {
             });
         }
 
-        if (scrollTop >= 1100) {
+        if (scrollTop >= 900) {
             showUIOpacity();
         }
 
-        if (scrollTop < 1100) {
+        if (scrollTop < 900) {
             hideUIOpacity();
             scrolledPast = false;
         }
@@ -500,14 +502,17 @@ if (currentMode === 'mobile') {
 
         // helper function to remove dynamic windows
         function removeWindow(el, clearRef) {
+            if (!el) return;
+
             el.classList.add('zoom-out');
+
             el.addEventListener('animationend', () => {
                 el.remove();
                 clearRef();
             }, { once: true });
         }
 
-                if (scrollTop <= 2100 && designer) {
+        if (scrollTop <= 2100 && designer) {
             removeWindow(designer, () => designer = null);
         }
 
@@ -519,7 +524,7 @@ if (currentMode === 'mobile') {
             removeWindow(creator, () => creator = null);
         }
 
-        if (scrollTop > 3000 && !finalized) {
+        if (scrollTop > 3000) {
             finalized = true;
 
             hideUIOpacity();
@@ -533,13 +538,121 @@ if (currentMode === 'mobile') {
         }
 
         if (scrollTop <= 3000) {
-            showUIOpacity();
             finalized = false;
 
             if (popupCreated) {
                 const popupDiv = document.querySelector('.popup-div-notif');
                 popupDiv.style.zIndex = '9999';
             }
+        }
+
+        if (scrollTop > 3200 && scrollTop <= 3500 && !aboutMeSummaryCreated) {
+            aboutMeSummaryCreated = true;
+
+            // experience!
+            const aboutMeContent = document.createElement('div');
+            const aboutMeHeader = document.createElement('h1');
+            aboutMeHeader.textContent = 'Recent Technical Experience';
+            aboutMeContent.appendChild(aboutMeHeader);
+
+            const weeeDiv = document.createElement('div')
+            weeeDiv.className = 'resume-div';
+            const weeeHeader = document.createElement('h3');
+            weeeHeader.className = 'resume-header';
+            weeeHeader.textContent = 'Software Engineer @ Weee!'
+            weeeDiv.appendChild(weeeHeader);
+            const weeeFirstBullet = document.createElement('p');
+            weeeFirstBullet.textContent = 'Designed and shipped a CMS-like seasonal campaign system powering dynamic React storefronts and homepage modules via backend APIs and feature-flagged rollouts, enabling non-engineering teams to launch and iterate on high-traffic holiday campaigns without code changes while preserving site reliability.';
+            weeeHeader.appendChild(weeeFirstBullet);
+            aboutMeContent.appendChild(weeeDiv);
+
+            const FHDiv = document.createElement('div')
+            FHDiv.className = 'resume-div';
+            const FHHeader = document.createElement('h3');
+            FHHeader.className = 'resume-header';
+            FHHeader.textContent = 'Frontend Engineer @ Fourth & Hope'
+            FHDiv.appendChild(FHHeader);
+            const FHFirstBullet = document.createElement('p');
+            FHFirstBullet.textContent = 'Modernized and optimized a React platform by refactoring legacy components, improving routing and performance, implementing WCAG-compliant accessibility fixes, enhancing SEO and responsiveness, and translating design mockups into reusable components.';
+            FHHeader.appendChild(FHFirstBullet);
+            aboutMeContent.appendChild(FHDiv);
+
+            summaryWindowEl = createWindow('summary-window-id', aboutMeContent, 'experience.txt', null);
+
+            const aboutMeWindow = document.querySelector('.about-me');
+            aboutMeWindow.classList.add('about-me-mobile');
+
+        }
+
+        if (scrollTop <= 3200) {
+            removeAboutMeWindow(summaryWindowEl, () => summaryWindowEl = null);
+            aboutMeSummaryCreated = false;
+        }
+
+        if (scrollTop > 3500 && aboutMeSummaryCreated) {
+            removeAboutMeWindow(summaryWindowEl, () => summaryWindowEl = null);
+            aboutMeSummaryCreated = false;
+        }
+
+        if (scrollTop > 3600 && !aboutMeSummaryCreated && !aboutMeAvatarCreated) {
+            // avatar
+            aboutMeAvatarCreated = true;
+            const avatar = document.createElement('img');
+            avatar.src = 'images/default-avatar-open.PNG';
+            avatar.alt = 'avatar';
+            avatar.className = 'avatar-mobile';
+
+            const outfitSwitch = document.createElement('div');
+            outfitSwitch.className = 'outfit-switch';
+
+            const fits = [
+                { icon: "fa-solid fa-child-dress", outfit: 'default'},
+                { icon: "fa-solid fa-star", outfit: 'y2k'},
+                { icon: "fa-solid fa-snowflake", outfit: 'winter'},
+                { icon: "fa-solid fa-apple-whole", outfit: 'apple'}
+            ]
+
+            fits.forEach(({ icon, outfit }) => {
+                const fitButton = document.createElement('button');
+                fitButton.className = 'fit-btn';
+
+                const iconElement = document.createElement('i');
+                iconElement.className = icon;
+
+                fitButton.appendChild(iconElement);
+
+                fitButton.addEventListener('click', () => {
+                currentOutfit = outfit;
+                
+                const isCloneVisible = scrollTop > 3600 && scrollTop <= 4200;
+                
+                if (isCloneVisible) {
+                    const clone = document.getElementById('avatar-window-clone');
+                    if (clone) {
+                        const clonedAvatar = clone.querySelector('.avatar');
+                        if (clonedAvatar) {
+                            clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
+                            startBlinking(clonedAvatar, outfit);
+                        }
+                    }
+                    
+                    if (avatar) {
+                        avatar.src = `images/${outfit}-avatar-open.PNG`;
+                    }
+                } else {
+                    if (avatar) {
+                        avatar.src = `images/${outfit}-avatar-open.PNG`;
+                        startBlinking(avatar, outfit);
+                    }
+                }
+            });
+                outfitSwitch.appendChild(fitButton);
+            })
+
+            avatarWindowEl = createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
+
+            // avatar animation
+            startBlinking(avatar, 'default');
         }
     })
 
