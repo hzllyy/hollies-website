@@ -622,30 +622,31 @@ if (currentMode === 'mobile') {
                 fitButton.appendChild(iconElement);
 
                 fitButton.addEventListener('click', () => {
-                currentOutfit = outfit;
-                
-                const isCloneVisible = scrollTop > 3600 && scrollTop <= 4200;
-                
-                if (isCloneVisible) {
-                    const clone = document.getElementById('avatar-window-clone');
-                    if (clone) {
-                        const clonedAvatar = clone.querySelector('.avatar');
-                        if (clonedAvatar) {
-                            clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
-                            startBlinking(clonedAvatar, outfit);
+                    currentOutfit = outfit;
+                    
+                    const isCloneVisible = scrollTop > 3800 && scrollTop <= 4200;
+                    
+                    if (isCloneVisible) {
+                        const clone = document.getElementById('avatar-window-clone');
+                        if (clone) {
+                            const clonedAvatar = clone.querySelector('.avatar-mobile');
+                            if (clonedAvatar) {
+                                clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
+                                startBlinking(clonedAvatar, outfit);
+                            }
+                        }
+                        
+                        if (avatar) {
+                            avatar.src = `images/${outfit}-avatar-open.PNG`;
+                        }
+                    } else {
+                        if (avatar) {
+                            avatar.src = `images/${outfit}-avatar-open.PNG`;
+                            startBlinking(avatar, outfit);
                         }
                     }
-                    
-                    if (avatar) {
-                        avatar.src = `images/${outfit}-avatar-open.PNG`;
-                    }
-                } else {
-                    if (avatar) {
-                        avatar.src = `images/${outfit}-avatar-open.PNG`;
-                        startBlinking(avatar, outfit);
-                    }
                 }
-            });
+            );
                 outfitSwitch.appendChild(fitButton);
             })
 
@@ -845,30 +846,31 @@ if (currentMode === 'mobile') {
                 fitButton.appendChild(iconElement);
 
                 fitButton.addEventListener('click', () => {
-                currentOutfit = outfit;
-                
-                const isCloneVisible = scrollTop > 3600 && scrollTop <= 4200;
-                
-                if (isCloneVisible) {
-                    const clone = document.getElementById('avatar-window-clone');
-                    if (clone) {
-                        const clonedAvatar = clone.querySelector('.avatar');
-                        if (clonedAvatar) {
-                            clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
-                            startBlinking(clonedAvatar, outfit);
+                    currentOutfit = outfit;
+                    
+                    const isCloneVisible = scrollTop > 3600 && scrollTop <= 4200;
+                    
+                    if (isCloneVisible) {
+                        const clone = document.getElementById('avatar-window-clone');
+                        if (clone) {
+                            const clonedAvatar = clone.querySelector('.avatar');
+                            if (clonedAvatar) {
+                                clonedAvatar.src = `images/${outfit}-avatar-open.PNG`;
+                                startBlinking(clonedAvatar, outfit);
+                            }
+                        }
+                        
+                        if (avatar) {
+                            avatar.src = `images/${outfit}-avatar-open.PNG`;
+                        }
+                    } else {
+                        if (avatar) {
+                            avatar.src = `images/${outfit}-avatar-open.PNG`;
+                            startBlinking(avatar, outfit);
                         }
                     }
-                    
-                    if (avatar) {
-                        avatar.src = `images/${outfit}-avatar-open.PNG`;
-                    }
-                } else {
-                    if (avatar) {
-                        avatar.src = `images/${outfit}-avatar-open.PNG`;
-                        startBlinking(avatar, outfit);
-                    }
                 }
-            });
+            );
                 outfitSwitch.appendChild(fitButton);
             })
 

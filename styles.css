@@ -387,6 +387,11 @@ h1, h2, p{
     transform: scale(1.1);
 }
 
+.outfit-switch-selected {
+    border: 3px solid black;
+    transform: scale(1.1);
+}
+
 .outfit-switch-off .fit-btn {
     opacity: 0.5;
     cursor: not-allowed;
