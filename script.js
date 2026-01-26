@@ -603,7 +603,9 @@ if (currentMode === 'mobile') {
             avatar.className = 'avatar-mobile';
 
             const outfitSwitch = document.createElement('div');
-            outfitSwitch.className = 'outfit-switch';
+            outfitSwitch.className = 'outfit-switch-mobile';
+
+            hi.style.pointerEvents = 'none';
 
             const fits = [
                 { icon: "fa-solid fa-child-dress", outfit: 'default'},
@@ -612,9 +614,17 @@ if (currentMode === 'mobile') {
                 { icon: "fa-solid fa-apple-whole", outfit: 'apple'}
             ]
 
-            fits.forEach(({ icon, outfit }) => {
+            let currentSelectedButton = null;
+
+            fits.forEach(({ icon, outfit }, index) => {
                 const fitButton = document.createElement('button');
                 fitButton.className = 'fit-btn';
+
+                if (index === 0) {
+                    fitButton.classList.add('fit-selected');
+                    currentSelectedButton = fitButton;
+                    currentOutfit = 'default';
+                }
 
                 const iconElement = document.createElement('i');
                 iconElement.className = icon;
@@ -622,6 +632,12 @@ if (currentMode === 'mobile') {
                 fitButton.appendChild(iconElement);
 
                 fitButton.addEventListener('click', () => {
+                    if (currentSelectedButton) {
+                        currentSelectedButton.classList.remove('fit-selected');
+                    }
+
+                    fitButton.classList.add('fit-selected');
+                    currentSelectedButton = fitButton;
                     currentOutfit = outfit;
                     
                     const isCloneVisible = scrollTop > 3800 && scrollTop <= 4200;
@@ -654,6 +670,44 @@ if (currentMode === 'mobile') {
 
             // avatar animation
             startBlinking(avatar, 'default');
+
+            const hobbyArray = [
+                { src: 'images/html5.PNG', label: 'HTML5'},
+                { src: 'images/css3.PNG', label: 'CSS3'},
+                { src: 'images/js.PNG', label: 'JavaScript'},
+                { src: 'images/react.PNG', label: 'React'},
+                { src: 'images/nodejs.PNG', label: 'NodeJS'}
+            ]
+
+            const hobbies = document.createElement('div');
+            hobbies.className = 'hobbies-div-mobile';
+
+            let currentHobby = null;
+
+            hobbyArray.forEach(({ src, label }) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'hobby-mobile';
+
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = label;
+
+                wrapper.dataset.label = label;
+                wrapper.appendChild(img);
+                hobbies.appendChild(wrapper);
+
+                img.addEventListener('click', () => {
+                    if (currentHobby) {
+                        currentHobby.classList.remove('hobby-selected');
+                    }
+                    
+                    img.classList.add('hobby-selected');
+                    currentHobby = img;
+                })
+                
+            })
+
+            hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'skills.jpg', null);
         }
     })
 

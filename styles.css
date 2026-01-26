@@ -225,12 +225,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 3vh;
+    padding: 0 3vw;
 }
 
 .hobby {
   position: relative;
   display: inline-block;
+}
+
+.hobby-selected {
+    transform: scale(1.2);
 }
 
 .hobby::after {
@@ -281,6 +285,7 @@ body {
 
 .avatar-mobile {
     height: 120vw;
+    padding: 0 3vw;
 }
 
 .nav-btns {
@@ -306,8 +311,19 @@ h1, h2, p{
     padding: 2vh 2vh;
 }
 
+.hobbies-div-mobile {
+    display: flex;
+    gap: 1vw;
+    padding: 1vh 0;
+}
+
 .hobbies-div img {
     height: 12vh;
+}
+
+.hobbies-div-mobile img {
+    margin-top: 0.5vw;
+    height: 12vw;
 }
 
 .hobbies-div img:hover {
@@ -371,7 +387,23 @@ h1, h2, p{
     margin: 2vh 2vh 2vh 0;
 }
 
+.outfit-switch-mobile {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2vh;
+}
+
 .outfit-switch button {
+    margin-bottom: 1vh;
+    border: 2px solid black;
+    height: 6vh;
+    width: 6vh;
+    border-radius: 5px;
+    background-color: #FF98CD;
+    font-size: 2.4vh;
+}
+
+.outfit-switch-mobile button {
     margin-bottom: 1vh;
     border: 2px solid black;
     height: 6vh;
@@ -389,6 +421,11 @@ h1, h2, p{
 
 .outfit-switch-selected {
     border: 3px solid black;
+    transform: scale(1.1);
+}
+
+.fit-selected {
+    border: 3px solid black !important;
     transform: scale(1.1);
 }
 
