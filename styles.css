@@ -717,4 +717,13 @@ h1, h2, p{
   animation: grain 0.3s steps(3) infinite;
 }
 
-
+@media (max-aspect-ratio: 4 / 5) {
+    .notification {
+        position: fixed;
+        z-index: 9999;
+        top: 28%;
+        left: 12%;
+        height: 8vw;
+        visibility: hidden;
+    }
+}

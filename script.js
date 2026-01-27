@@ -945,7 +945,7 @@ if (currentMode === 'mobile') {
             notificationCreated = true;
         }
 
-        if (scrollTop < 4600 && notificationCreated) {
+        if (scrollTop < 4400 && notificationCreated) {
             const notification = document.querySelector('.notification');
             hideWindowWithAnimation(notification);
             notificationCreated = false;
