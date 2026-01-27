@@ -279,6 +279,50 @@ body {
   transform: translateX(-50%) scale(1);
 }
 
+.hobby-mobile {
+    position: relative;
+    display: inline-block;
+}
+
+.hobby-mobile img::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    background: black;
+    color: white;
+    font-family: 'Anonymous Pro';
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+.hobby-mobile img::before {
+    content: '';
+    position: absolute;
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: black;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 9;
+}
+
+.hobby-mobile img.tooltip-active::after,
+.hobby-mobile img.tooltip-active::before {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
 .avatar {
     height: 75vh;
 }

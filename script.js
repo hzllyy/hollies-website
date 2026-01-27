@@ -365,7 +365,7 @@ if (currentMode === 'mobile') {
         const scalehi = 1 + scrollTop / 900;
 
         if (scrollTop <= 1500) {
-            computer.style.transform = `scale(${scale})`;
+            computer.style.transform = `scale(${scale}) translateY(-${scale2}%)`;
             hi.style.transform = `translateY(${-(scale2 - 1) * 300}%) scale(${scalehi})`;
             nwindow.style.height = '72vw';
             nwindowWrapper.style.top = '84vw';
@@ -594,7 +594,7 @@ if (currentMode === 'mobile') {
             aboutMeSummaryCreated = false;
         }
 
-        if (scrollTop > 3600 && !aboutMeSummaryCreated && !aboutMeAvatarCreated) {
+        if (scrollTop > 3600 && !aboutMeSummaryCreated && !aboutMeAvatarCreated && scrollTop <= 3900) {
             // avatar
             aboutMeAvatarCreated = true;
             const avatar = document.createElement('img');
@@ -615,7 +615,7 @@ if (currentMode === 'mobile') {
             ]
 
             let currentSelectedButton = null;
-
+            
             fits.forEach(({ icon, outfit }, index) => {
                 const fitButton = document.createElement('button');
                 fitButton.className = 'fit-btn';
@@ -666,7 +666,10 @@ if (currentMode === 'mobile') {
                 outfitSwitch.appendChild(fitButton);
             })
 
-            avatarWindowEl = createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
+            if (!document.getElementById('avatar-window-id')) {
+                aboutMeAvatarCreated = true;
+                avatarWindowEl = createWindow('avatar-window-id', avatar, 'avatar.jpg', outfitSwitch);
+            }
 
             // avatar animation
             startBlinking(avatar, 'default');
@@ -691,12 +694,53 @@ if (currentMode === 'mobile') {
                 const img = document.createElement('img');
                 img.src = src;
                 img.alt = label;
+                img.title = label;
 
                 wrapper.dataset.label = label;
                 wrapper.appendChild(img);
                 hobbies.appendChild(wrapper);
 
+                const tooltip = document.createElement('div');
+                tooltip.className = 'mobile-tooltip';
+                tooltip.textContent = label;
+                tooltip.style.cssText = `
+                    position: absolute;
+                    top: -30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 4px 8px;
+                    border-radius: 6px;
+                    font-size: 4vw !important;
+                    font-family: 'Anonymous Pro' !important;
+                    white-space: nowrap;
+                    opacity: 0;
+                    transition: opacity 0.2s;
+                    pointer-events: none;
+                    z-index: 100;
+                `;
+                
+                wrapper.appendChild(tooltip);
+
                 img.addEventListener('click', () => {
+                    tooltip.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        tooltip.style.opacity = '0';
+                    }, 1000);
+                });
+
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    img.classList.toggle('tooltip-active');
+
+                    document.querySelectorAll('.hobby-mobile img').forEach(otherImg => {
+                        if (otherImg !== img) {
+                            otherImg.classList.remove('tooltip-active');
+                        }
+                    })
+
                     if (currentHobby) {
                         currentHobby.classList.remove('hobby-selected');
                     }
@@ -707,8 +751,337 @@ if (currentMode === 'mobile') {
                 
             })
 
-            hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'skills.jpg', null);
+            if (!document.querySelector('#hobbies-window-id')) {
+                hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'skills.jpg', null);
+            }
         }
+
+        if (scrollTop <= 3600) {
+            aboutMeAvatarCreated = false;
+
+            if (blinkInterval) {
+                clearInterval(blinkInterval);
+                blinkInterval = null;
+            }
+            removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
+            removeAboutMeWindow(avatarWindowEl, () => avatarWindowEl = null);
+        }
+
+        if (scrollTop > 3900 && aboutMeAvatarCreated) {
+            removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
+            summaryHobbiesHidden = true;
+            aboutMeAvatarCreated = false;
+        }
+
+        // PAIN IN THE ASS avatar window zoom ;-;
+        if (scrollTop > 3900 && scrollTop <= 4600 && avatarWindowEl) {
+            const progress = (scrollTop - 3900) / 700;
+
+            if (!start) {
+                const originalAvatarImg = avatarWindowEl.querySelector('.avatar-mobile');
+                if (originalAvatarImg && originalAvatarImg.dataset.blinkIntervalId) {
+                    clearInterval(parseInt(originalAvatarImg.dataset.blinkIntervalId));
+                    delete originalAvatarImg.dataset.blinkIntervalId;
+                }
+
+                const clone = avatarWindowEl.cloneNode(true);
+                clone.id = 'avatar-window-clone';
+
+                const rect = avatarWindowEl.getBoundingClientRect();
+
+                clone.style.position = 'fixed';
+                clone.style.left = `${rect.left}px`;
+                clone.style.top = `${rect.top}px`;
+                clone.style.height = `${avatarWindowEl.offsetHeight}px`;
+                clone.style.zIndex = '10';
+                clone.style.width = '85vw';
+                clone.style.fontSize = '4vw';
+
+                const clonedAvatarImg = clone.querySelector('.avatar-mobile');
+                if (clonedAvatarImg) {
+                    clonedAvatarImg.src = `images/${currentOutfit}-avatar-open.PNG`;
+                    startBlinking(clonedAvatarImg, currentOutfit);
+                }
+
+                avatarWindowEl.style.visibility = 'hidden';
+
+                avatarWindowEl.dataset.clone = 'true';
+                document.body.appendChild(clone);
+                
+                avatarWindowEl.dataset.originalHeight = avatarWindowEl.offsetHeight;
+
+                const cloneOutfitSwitch = clone.querySelector('.outfit-switch-mobile');
+                if (cloneOutfitSwitch) {
+                    cloneOutfitSwitch.classList.add('outfit-switch-off');
+                }
+                
+                start = true;
+            }
+
+            const originalHeight = parseFloat(avatarWindowEl.dataset.originalHeight);
+            const newHeight = originalHeight * (1 + (0.25 * progress));
+
+            const clone = document.getElementById('avatar-window-clone');
+            const innerWindow = clone?.querySelector('.aboutme-inner-window');
+
+            if (clone) {
+                clone.style.height = `${newHeight}px`;
+                
+                const avatarImg = clone.querySelector('.avatar-mobile');
+                const outfitSwitch = clone.querySelector('.outfit-switch-mobile');
+                const belowHeader = clone.querySelector('.belowHeader');
+
+                const newInnerHeight = newHeight - 90;
+                
+                if (innerWindow && avatarImg && outfitSwitch && belowHeader) {
+                    belowHeader.style.display = 'flex';
+                    belowHeader.style.alignItems = 'stretch';
+
+                    innerWindow.style.overflow = 'hidden';
+                    innerWindow.style.height = `${newInnerHeight}px`;
+
+                    const scale3 = ((1/1.4) + progress) * 1.4;
+                    const scale4 = ((1/16) + progress) * 16;
+                    const scale5 = ((1/22)+ progress) * 22;
+                    const scale6 = ((1/5) + progress) * 5;
+
+                    avatarImg.style.height = '120vw';
+                    avatarImg.style.flexShrink = '0';
+                    avatarImg.style.transform = `scale(${scale3}) translateX(-${scale4}%)`;
+                    
+                    outfitSwitch.style.flexShrink = '0';
+                    outfitSwitch.style.height = 'auto';
+                    outfitSwitch.style.display = 'flex';
+                    outfitSwitch.style.flexDirection = 'column';
+                    outfitSwitch.style.justifyContent = 'start';
+
+                const notebook = innerWindow.querySelector('.notebook');
+                if (notebook) {
+                    notebook.style.transform = `scale(${scale3})`;
+                    notebook.style.transformOrigin = 'center center';
+                }
+
+                if (!notebookCreated) {
+                    const notebook = document.createElement('img');
+                    notebook.src = '/images/project-notebook-selected.PNG';
+                    notebook.alt = 'project-notebook';
+                    notebook.className = 'notebook';
+                    
+                    innerWindow.appendChild(notebook);
+                    
+                    notebook.style.position = 'absolute';
+                    notebook.style.height = '115vw';
+                    
+                    const notebookHoverArea = document.createElement('div');
+                    notebookHoverArea.className = 'notebook-hover-area';
+                    notebookHoverArea.style.position = 'absolute';
+                    notebookHoverArea.style.width = '22%';
+                    notebookHoverArea.style.height = '12%';
+                    notebookHoverArea.style.left = '42%';
+                    
+                    innerWindow.appendChild(notebookHoverArea);
+                    
+                    notebookHoverArea.addEventListener('click', () => {
+                        const viewProject = document.querySelector('.projects-view');
+                        if (viewProject) {
+                            viewProject.style.display = 'block';
+                            document.body.style.overflow = 'hidden';
+                            projectSelected = true;
+                            coverPage = true;
+                            backCover = false;
+                            openBook = false;
+                            bookListenersSetup = false; 
+                            pageNum = 0;
+
+                            setTimeout(() => {
+                                setupProjectBook();
+                            }, 10);
+                        } else {
+                            console.error('projects-view element not found!');
+                        }
+                    });
+                    
+                    notebookCreated = true;
+                }
+
+                const notebookHoverArea = innerWindow.querySelector('.notebook-hover-area');
+                if (notebook && notebookHoverArea) {
+                    notebook.style.padding = '0 3vw';
+                    notebook.style.transform = `scale(${scale3}) translateX(-${scale5}%) translateY(-${scale6}%)`;
+                    notebookHoverArea.style.transform = `scale(${scale3}) translateX(-${scale5}%) translateY(-${scale6}%)`;
+                    notebookHoverArea.style.transformOrigin = 'center center';
+                }
+
+            if (!bagCreated) {
+                    const bag = document.createElement('img');
+                    bag.src = '/images/bag.PNG';
+                    bag.alt = 'bag';
+                    bag.className = 'bag';
+                    
+                    innerWindow.appendChild(bag);
+                    
+                    bag.style.position = 'absolute';
+                    bag.style.pointerEvents = 'none';
+                    
+                    bagCreated = true;
+                }
+
+                const bag = innerWindow.querySelector('.bag');
+                bag.style.height = '120vw';
+                if (bag) {
+                    bag.style.transform = `scale(${scale3}) translateX(-${scale4}%)`;
+                    bag.style.transformOrigin = 'center center';
+                    bag.style.padding = '0 3vw';
+                }  
+                }
+            }
+        }
+
+        if (scrollTop >= 4400 && !notificationCreated) {
+            createNotification();
+            
+            const notification = document.querySelector('.notification');
+            showWindowWithAnimation(notification);
+            notificationCreated = true;
+        }
+
+        if (scrollTop < 4600 && notificationCreated) {
+            const notification = document.querySelector('.notification');
+            hideWindowWithAnimation(notification);
+            notificationCreated = false;
+        }
+
+        // scroll past avatar zoom 
+        if (scrollTop > 4600 && scrollTop <= 4800) {
+            const clone = document.getElementById('avatar-window-clone');
+            cloneShouldExist = true;
+            if (cloneWindowHidden) {
+                showWindowWithAnimation(clone);
+                cloneWindowHidden = false;
+            }
+
+            if (clone && avatarWindowEl) {
+                if (!avatarWindowEl.dataset.originalHeight) {
+                    avatarWindowEl.dataset.originalHeight = avatarWindowEl.offsetHeight / 1.25;
+                }
+                
+                const originalHeight = parseFloat(avatarWindowEl.dataset.originalHeight);
+                const newHeight = originalHeight * 1.25;
+                
+                clone.style.height = `${newHeight}px`;
+                
+                // Ensure blinking
+                const clonedAvatarImg = clone.querySelector('.avatar-mobile');
+                if (clonedAvatarImg && !clonedAvatarImg.dataset.blinkingStarted) {
+                    startBlinking(clonedAvatarImg, currentOutfit);
+                }
+
+                const cloneOutfitSwitch = clone.querySelector('.outfit-switch-mobile');
+                if (cloneOutfitSwitch && !cloneOutfitSwitch.classList.contains('outfit-switch-off')) {
+                    cloneOutfitSwitch.classList.add('outfit-switch-off');
+                }
+                
+                // maintain layout
+                const innerWindow = clone.querySelector('.aboutme-inner-window-mobile');
+                const avatarImg = clone.querySelector('.avatar-mobile');
+                const outfitSwitch = clone.querySelector('.outfit-switch-mobile');
+                const belowHeader = clone.querySelector('.belowHeader');
+                
+                if (innerWindow && avatarImg && outfitSwitch && belowHeader) {
+                    belowHeader.style.display = 'flex';
+                    belowHeader.style.alignItems = 'stretch';
+                    
+                    innerWindow.style.flex = '1';
+                    innerWindow.style.minHeight = '0';
+                    innerWindow.style.display = 'flex';
+                    innerWindow.style.justifyContent = 'center';
+                    innerWindow.style.alignItems = 'center';
+                    innerWindow.style.overflow = 'hidden';
+                    
+                    avatarImg.style.height = 'auto';
+                    avatarImg.style.maxHeight = '120vw';
+                    avatarImg.style.flexShrink = '0';
+                    
+                    outfitSwitch.style.flexShrink = '0';
+                    outfitSwitch.style.height = 'auto';
+                }
+            }
+        }
+
+        if (scrollTop <= 3900 && avatarWindowEl) {
+            const clone = document.getElementById('avatar-window-clone');
+            if (clone) {
+                // stop blinking on the clone before removing
+                const clonedAvatarImg = clone.querySelector('.avatar-mobile');
+                if (clonedAvatarImg && clonedAvatarImg.dataset.blinkIntervalId) {
+                    clearInterval(parseInt(clonedAvatarImg.dataset.blinkIntervalId));
+                }
+                clone.remove();
+            }
+            
+            // show og avatarwindow
+            avatarWindowEl.style.visibility = '';
+            
+            const belowHeader = avatarWindowEl.querySelector('.belowHeader');
+            const innerWindow = avatarWindowEl.querySelector('.aboutme-inner-window-mobile');
+            const avatarImg = avatarWindowEl.querySelector('.avatar-mobile');
+            const outfitSwitch = avatarWindowEl.querySelector('.outfit-switch-mobile');
+            
+            if (belowHeader) {
+                belowHeader.style.display = '';
+                belowHeader.style.alignItems = '';
+            }
+            
+            if (innerWindow) {
+                innerWindow.style.flex = '';
+                innerWindow.style.minHeight = '';
+                innerWindow.style.display = '';
+                innerWindow.style.justifyContent = '';
+                innerWindow.style.alignItems = '';
+                innerWindow.style.overflow = '';
+            }
+            
+            if (avatarImg) {
+                avatarImg.style.height = '';
+                avatarImg.style.maxHeight = '';
+                avatarImg.style.flexShrink = '';
+            }
+            
+            if (outfitSwitch) {
+                outfitSwitch.style.flexShrink = '';
+                outfitSwitch.style.height = '';
+                outfitSwitch.style.display = '';
+                outfitSwitch.style.flexDirection = '';
+                outfitSwitch.style.justifyContent = '';
+                outfitSwitch.style.padding = '';
+            }
+            
+            // restart og blinking
+            const originalAvatarImg = avatarWindowEl.querySelector('.avatar-mobile');
+            if (originalAvatarImg) {
+                originalAvatarImg.src = `images/${currentOutfit}-avatar-open.PNG`;
+                startBlinking(originalAvatarImg, currentOutfit);
+            }
+            
+            delete avatarWindowEl.dataset.originalHeight;
+            delete avatarWindowEl.dataset.clone;
+            start = false;
+            bagCreated = false;
+            notebookCreated = false;
+        }
+
+        if (projectSelected && !bookListenersSetup) {
+            setupProjectBook();
+        }
+
+        if (scrollTop > 4800 && cloneShouldExist) {
+            const clone = document.getElementById('avatar-window-clone');
+            if (clone && !cloneWindowHidden) {
+                hideWindowWithAnimation(clone);
+                cloneWindowHidden = true;
+            }
+        }     
+
     })
 
 } else {
@@ -989,12 +1362,6 @@ if (currentMode === 'mobile') {
             hobbiesWindowEl = createWindow('hobbies-window-id', hobbies, 'skills.jpg', null);
 
             const element = avatarWindowEl;
-            const rect = element.getBoundingClientRect();
-
-            console.log({
-                left: rect.left,        
-                top: rect.top,          
-            });
         }
 
         // remove about me if scrolled up
@@ -1080,7 +1447,7 @@ if (currentMode === 'mobile') {
             }
 
             const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-            const newWidth = originalWidth + (originalWidth * 1.65 * progress);
+            const newWidth = originalWidth + (originalWidth * 1.75 * progress);
 
             const clone = document.getElementById('avatar-window-clone');
             if (clone) {
@@ -1172,7 +1539,6 @@ if (currentMode === 'mobile') {
                         }
                     });
                     
-                    console.log('notebook and hover area created');
                     notebookCreated = true;
                 }
 
@@ -1195,7 +1561,6 @@ if (currentMode === 'mobile') {
                     bag.style.pointerEvents = 'none';
                     bag.style.height = '75vh';
                     
-                    console.log('bag created');
                     bagCreated = true;
                 }
 
@@ -1209,7 +1574,6 @@ if (currentMode === 'mobile') {
         }
 
         if (scrollTop >= 4400 && !notificationCreated) {
-            console.log('notification created');
             createNotification();
             
             const notification = document.querySelector('.notification');
@@ -1234,11 +1598,11 @@ if (currentMode === 'mobile') {
 
             if (clone && avatarWindowEl) {
                 if (!avatarWindowEl.dataset.originalWidth) {
-                    avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.65;
+                    avatarWindowEl.dataset.originalWidth = avatarWindowEl.offsetWidth / 2.75;
                 }
                 
                 const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-                const newWidth = originalWidth * 2.65;
+                const newWidth = originalWidth * 2.75;
                 
                 clone.style.width = `${newWidth}px`;
                 
@@ -1366,10 +1730,9 @@ if (currentMode === 'mobile') {
                 hideWindowWithAnimation(clone);
                 cloneWindowHidden = true;
             }
-
         }      
-        }
-    );
+    }
+);
 }
 
 // handle switch between desktop and mobile
