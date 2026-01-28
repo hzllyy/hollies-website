@@ -25,7 +25,7 @@ function isMobile() {
     const aspectRatio = window.innerWidth / window.innerHeight;
     const screenRatio = window.screen.width / window.screen.height;
 
-    const mobileRatio = { min: 0.44, max: 0.8};
+    const mobileRatio = { min: 0.40, max: 0.545};
 
     if (aspectRatio >= mobileRatio.min && aspectRatio <= mobileRatio.max ||
         screenRatio >= mobileRatio.min && screenRatio <= mobileRatio.max
@@ -553,6 +553,7 @@ if (currentMode === 'mobile') {
             const aboutMeContent = document.createElement('div');
             const aboutMeHeader = document.createElement('h1');
             aboutMeHeader.textContent = 'Recent Technical Experience';
+            aboutMeHeader.className = 'resume-h';
             aboutMeContent.appendChild(aboutMeHeader);
 
             const weeeDiv = document.createElement('div')
@@ -1744,7 +1745,11 @@ window.addEventListener('resize', () => {
         const newMode = newMobile ? 'mobile' : 'desktop';
 
         if (newMode !== currentMode) {
-            location.reload();
+            window.scrollTo(0,0);
+
+            setTimeout(() => {
+                location.reload();
+            }, 50);
         }
     }, 300);
 })

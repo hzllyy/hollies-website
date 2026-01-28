@@ -571,33 +571,42 @@ h1, h2, p{
     height: 100vh;
 }
 
+.envelope-back {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100vh;
+}
+
 .envelope {
     pointer-events: none;
 }
 
 #form {
     position: absolute;
-    top: 17vh;
+    top: 14vh;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-55%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3%;
 
     cursor: pointer;
-    width: 35vh;
+    width: 25vh;
     height: 25vh;
     padding: 10vh 10vh;
 
     text-align: center;
     font-family: 'Anonymous Pro';
+    color: #8a6a7c;
 }
 
 .small {
     border: none;
     border-bottom: 1px solid;
-    border-color: #836c8c;
+    border-color: #8a6a7c;
     background-color: rgb(0, 0, 0, 0);
     font-family: 'Anonymous Pro';
     width: 100%;
@@ -608,7 +617,7 @@ h1, h2, p{
 }
 
 #message {
-    border: 1px solid #836c8c;
+    border: 1px solid #8a6a7c;
     border-radius: 5px;
     background-color: rgb(0,0,0,0);
     font-family: 'Anonymous Pro';
@@ -628,10 +637,11 @@ h1, h2, p{
     width: 50%;
     height: 20%;
     font-family: 'Anonymous Pro';
-    color: #836c8c;
-    font-size: 2vh;
+    color: #8a6a7c;
+    font-size: 1.5vh;
     cursor: pointer;
-    margin-top: 3%;
+    margin-top: 2%;
+    padding: 0;
 }
 
 #form input[type=submit]:hover {
@@ -639,8 +649,8 @@ h1, h2, p{
 }
 
 #form h1 {
-    font-size: 3vh;
-    color: #836c8c;
+    font-size: 2vh;
+    color: #8a6a7c;
     margin-bottom: 2%;
 }
 
@@ -717,7 +727,48 @@ h1, h2, p{
   animation: grain 0.3s steps(3) infinite;
 }
 
-@media (max-aspect-ratio: 4 / 5) {
+@media (max-aspect-ratio: 1.43/1) {
+    .about-me {
+        width: 90%;
+    }
+
+    .belowHeader {
+        justify-content: center;
+    }
+
+    .aboutme-inner-window {
+        padding: 0 2vh;
+    }
+
+    .resume-div p {
+        font-size: 1.4vw !important;
+    }
+
+    .hobbies-div img {
+        height: 8vh;
+    }
+}
+
+@media (max-aspect-ratio: 1.2 / 1) {
+    h1 {
+        font-size: 3vw !important;
+    }
+
+    .hobbies-div {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .hobbies-div img {
+        height: 6vh;
+    }
+
+    .lets-connect-wrapper h1{
+        font-size: 2vw !important;
+    }
+}
+
+@media (max-aspect-ratio: 109 / 200) {
     .notification {
         position: fixed;
         z-index: 9999;
@@ -725,5 +776,42 @@ h1, h2, p{
         left: 12%;
         height: 8vw;
         visibility: hidden;
+    }
+
+    .envelope-back {
+        height: 140vw;
+    }
+
+    .notecard {
+        height: 140vw;
+        top: -10vw;
+    }
+
+    .envelope {
+        height: 140vw;
+    }
+
+    #form {
+        width: 35vw;
+        top: 16vw;
+    }
+
+    #form h1 {
+        font-size: 4.25vw !important;
+    }
+
+    .small {
+        font-size: 2.75vw !important;
+    }
+
+    #message {
+        font-size: 2.75vw !important;
+    }
+
+    #form-submit  {
+        position: absolute;
+        height: 6vw !important;
+        margin: 0;
+        top: 85vw;
     }
 }
