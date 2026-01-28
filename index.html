@@ -17,39 +17,48 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
+    <link rel="preload" as="image" href="images/portfolio_bg.PNG">
+    <link rel="preload" as="image" href="images/portfolio_screen.PNG">
+    <link rel="preload" as="image" href="images/window.png">
+    <link rel="preload" as="image" href="images/computer.PNG">
+    <link rel="preload" as="image" href="images/window-extender.png">
+    <link rel="preload" as="image" href="images/hi.png">
+    <link rel="preload" as="image" href="images/iama.png">
+    <link rel="preload" as="image" href="images/logo-left.PNG">
+
 </head>
 <body>
-    <img src="images/portfolio_screen.PNG" id="screen">
+    <img src="images/portfolio_screen.PNG" id="screen" alt="screen" loading="lazy">
 
     <div class="bg-wrapper">
-        <img src="images/portfolio_bg.PNG" id="bg">
+        <img src="images/portfolio_bg.PNG" id="bg" alt="background" loading="lazy">
     </div>
 
     <div class="hi-wrapper">
-        <img src="images/hi.png" id="hi">
+        <img src="images/hi.png" id="hi" alt="hi" loading="lazy">
     </div>
     
     <div class="window-wrapper">
-        <img src="images/window.png" id="window">
+        <img src="images/window.png" id="window" alt="window" loading="lazy">
     </div>
     
     <div class="extender-wrapper">
-        <img src="images/window-extender.png" id="extend">
+        <img src="images/window-extender.png" id="extend" alt="extend" loading="lazy">
     </div>
 
     <div class="iama-wrapper">
-        <img src="images/iama.png" id="iama">
+        <img src="images/iama.png" id="iama" alt="iama" loading="lazy">
     </div>
     
     <div class="logo-wrapper">
-        <img src="images/logo-left.PNG" id="logo">
+        <img src="images/logo-left.PNG" id="logo" alt="logo" loading="lazy">
     </div>
 
     <div class="projects-view">
         <button class="exit-btn">x</button>
         <div class="project-book">
             <button class="left-btn disabled"><</button>
-            <img src="images/cover_page.PNG" alt="book" class="book">
+            <img src="images/cover_page.PNG" alt="book" class="book" loading="lazy">
             <button class="right-btn">></button>
         </div>
     </div>
@@ -58,11 +67,11 @@
 
     <div class="contact">
         <div class="contact-me">
-            <img src="images/connect.PNG" alt="connect-me" class="contact-bg">
-            <img src="images/envelope-back.PNG" alt='envelope-back' class="envelope-back">
+            <img src="images/connect.PNG" alt="connect-me" class="contact-bg" loading="lazy">
+            <img src="images/envelope-back.PNG" alt='envelope-back' class="envelope-back" loading="lazy">
             <div class="lets-connect-wrapper">
                 <div class="lets-connect">
-                    <img src="images/notecard.PNG" alt="notecard" class="notecard">
+                    <img src="images/notecard.PNG" alt="notecard" class="notecard" loading="lazy">
                     <form 
                         id="form"
                         action="https://formspree.io/f/xwvvndgq"
@@ -77,12 +86,12 @@
                 </div>
             </div>
             
-            <img src="images/envelope.PNG" alt="envelope" class="envelope">
+            <img src="images/envelope.PNG" alt="envelope" class="envelope" loading="lazy">
         </div>
     </div>
 
     <div class="sent-msg">
-        <img src="images/sent_message.png" alt="message-sent">
+        <img src="images/sent_message.png" alt="message-sent" loading="lazy">
         <p class="msg-exit-btn">x</p>
     </div>
     
