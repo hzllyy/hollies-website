@@ -294,7 +294,7 @@ function setupProjectBook() {
                     projectBookImg.src = getPageImage(pageNum);
                     console.log('Turned to page:', pageNum, pageNames[pageNum]);
                 } else if (pageNum === 0) {
-                    projectBookImg.src = currentMode === 'mobile' ? 'images/cover_page-mobile.PNG' : 'images/cover_page.PNG';
+                    projectBookImg.src = currentMode === 'mobile' ? 'images/cover_page-mobile.png' : 'images/cover_page.PNG';
                     openBook = false;
                     coverPage = true;
                     console.log('Reached cover');
@@ -340,7 +340,7 @@ function setupProjectBook() {
             projectSelected = false;
             bookListenersSetup = false;
             pageNum = 0;
-            projectBookImg.src = currentMode === 'mobile' ? 'images/cover_page-mobile.PNG' : 'images/cover_page.PNG';
+            projectBookImg.src = currentMode === 'mobile' ? 'images/cover_page-mobile.png' : 'images/cover_page.PNG';
             coverPage = true;
             openBook = false;
             backCover = false;
@@ -936,7 +936,7 @@ if (currentMode === 'mobile') {
                         const viewProject = document.querySelector('.projects-view');
                         if (viewProject) {
                             const projectBookImg = document.querySelector('.book');
-                            projectBookImg.src = 'images/cover_page-mobile.PNG';
+                            projectBookImg.src = 'images/cover_page-mobile.png';
 
                             const leftBtn = document.querySelector('.left-btn');
                             const rightBtn = document.querySelector('.right-btn');
