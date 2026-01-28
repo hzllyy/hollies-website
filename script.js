@@ -218,8 +218,8 @@ function setupProjectBook() {
         const leftBtn = document.querySelector('.left-btn');
         const rightBtn = document.querySelector('.right-btn');
         const projectBookImg = document.querySelector('.book');
-        const projectView = document.querySelector('.projects-view')
-        const exitBtn = document.querySelector('.exit-btn')
+        const projectView = document.querySelector('.projects-view');
+        const exitBtn = document.querySelector('.exit-btn');
 
         const newLeftBtn = leftBtn.cloneNode(true);
         const newRightBtn = rightBtn.cloneNode(true);
@@ -229,89 +229,137 @@ function setupProjectBook() {
         const freshLeftBtn = document.querySelector('.left-btn');
         const freshRightBtn = document.querySelector('.right-btn');
 
+        // Page names in order (without mobile suffix)
+        const pageNames = ['seasonal', 'lumen', 'fourth&hope', 'idolchase'];
+        
+        // Function to get correct image path based on mode and page state
+        function getPageImage(pageIndex, turnType = null) {
+            const pageName = pageNames[pageIndex];
+            let imageName = pageName;
+            
+            if (turnType === 'left') {
+                imageName += '-turn-left';
+            } else if (turnType === 'right') {
+                imageName += '-turn-right';
+            }
+            
+            // Add mobile suffix if in mobile mode
+            if (currentMode === 'mobile') {
+                imageName += '-mobile';
+            }
+            
+            return `images/${imageName}.png`;
+        }
+
         freshRightBtn.addEventListener('click', () => {
             if (coverPage) {
-                projectBookImg.src = 'images/page1.png';
+                // Open book to first page
+                projectBookImg.src = getPageImage(0);
                 coverPage = false;
                 openBook = true;
+                pageNum = 0; // Set to first page
                 freshLeftBtn.classList.remove('disabled');
-                console.log('Book opened, page', pageNum)
-            } else if (openBook && pageNum < numPages) {
-                pageNum++;
-                projectBookImg.src = `images/page${pageNum + 1}.png`
-                console.log('Turned to page:', pageNum)
+                console.log('Book opened to page 0 (seasonal)');
+            } else if (backCover) {
+                // Already at back cover, do nothing
+                return;
+            } else if (openBook) {
+                if (pageNum < numPages - 1) {
+                    // Turn to next page
+                    pageNum++;
+                    projectBookImg.src = getPageImage(pageNum);
+                    console.log('Turned to page:', pageNum, pageNames[pageNum]);
+                } else if (pageNum === numPages - 1) {
+                    // On last page (idolchase), next click goes to back cover
+                    projectBookImg.src = currentMode === 'mobile' ? 'images/back_cover-mobile.PNG' : 'images/back_cover.PNG';
+                    openBook = false;
+                    backCover = true;
+                    console.log('Reached back cover');
+                }
             }
 
-            if (pageNum === numPages) {
-                projectBookImg.src = 'images/back_cover.PNG';
-                openBook = false;
-                backCover = true;
-                console.log('Reached the end');
-            }
-
+            // Update button states
             freshLeftBtn.classList.remove('disabled');
-            if (pageNum === numPages) {
+            if (backCover) {
                 freshRightBtn.classList.add('disabled');
+            } else {
+                freshRightBtn.classList.remove('disabled');
             }
         });
 
         freshLeftBtn.addEventListener('click', () => {
             if (backCover) {
-                projectBookImg.src = 'images/page4.png';
+                // Go back from back cover to last page
+                pageNum = numPages - 1; // Set to last page
+                projectBookImg.src = getPageImage(pageNum);
                 backCover = false;
                 openBook = true;
                 freshRightBtn.classList.remove('disabled');
-                console.log('Book opened, page', pageNum)
-            } else if (openBook && pageNum > 0) {
-                pageNum--;
-                projectBookImg.src = `images/page${pageNum}.png`
-                console.log('Turned to page:', pageNum)
+                console.log('Back to page', pageNum, pageNames[pageNum]);
+            } else if (coverPage) {
+                // Already at cover, do nothing
+                return;
+            } else if (openBook) {
+                if (pageNum > 0) {
+                    // Turn to previous page
+                    pageNum--;
+                    projectBookImg.src = getPageImage(pageNum);
+                    console.log('Turned to page:', pageNum, pageNames[pageNum]);
+                } else if (pageNum === 0) {
+                    // On first page (seasonal), next click goes to cover
+                    projectBookImg.src = currentMode === 'mobile' ? 'images/cover_page-mobile.PNG' : 'images/cover_page.PNG';
+                    openBook = false;
+                    coverPage = true;
+                    console.log('Reached cover');
+                }
             }
 
-            if (pageNum === 0) {
-                projectBookImg.src = 'images/cover_page.PNG';
-                openBook = false;
-                coverPage = true;
-                console.log('Reached the beginning.');
-            }
-
+            // Update button states
             freshRightBtn.classList.remove('disabled');
-            if (pageNum === 0) {
+            if (coverPage) {
                 freshLeftBtn.classList.add('disabled');
+            } else {
+                freshLeftBtn.classList.remove('disabled');
             }
         });
-        // page flip effect
-        // freshRightBtn.addEventListener('mouseover', () => {
-        //     if (openBook) {
-        //         projectBookImg.src = 'images/right_turn.PNG';
-        //     }
-        // });
 
-        // freshRightBtn.addEventListener('mouseout', () => {
-        //     if (openBook) {
-        //         projectBookImg.src = 'images/open_book.PNG';
-        //     }
-        // });
+        // Page turn hover effects (desktop only)
+        if (currentMode === 'desktop') {
+            freshRightBtn.addEventListener('mouseover', () => {
+                // Only show turn effect for pages that can turn right
+                if (openBook && (pageNum < numPages - 1 || pageNum === numPages - 1)) {
+                    // Last page can also turn to back cover
+                    projectBookImg.src = getPageImage(pageNum, 'right');
+                }
+            });
 
-        // freshLeftBtn.addEventListener('mouseover', () => {
-        //     if (openBook) {
-        //         projectBookImg.src = 'images/left_turn.PNG';
-        //     }
-        // });
+            freshRightBtn.addEventListener('mouseout', () => {
+                if (openBook) {
+                    projectBookImg.src = getPageImage(pageNum);
+                }
+            });
 
-        // freshLeftBtn.addEventListener('mouseout', () => {
-        //     if (openBook) {
-        //         projectBookImg.src = 'images/open_book.PNG';
-        //     }
-        // });
+            freshLeftBtn.addEventListener('mouseover', () => {
+                // Only show turn effect for pages that can turn left  
+                if (openBook && (pageNum > 0 || pageNum === 0)) {
+                    // First page can also turn to cover
+                    projectBookImg.src = getPageImage(pageNum, 'left');
+                }
+            });
 
+            freshLeftBtn.addEventListener('mouseout', () => {
+                if (openBook) {
+                    projectBookImg.src = getPageImage(pageNum);
+                }
+            });
+        }
         exitBtn.addEventListener('click', () => {
             document.body.style.overflow = '';
             projectView.style.display = 'none';
             projectSelected = false;
             bookListenersSetup = false;
             pageNum = 0;
-            projectBookImg.src = 'images/cover_page.PNG';
+            projectBookImg.src = currentMode === 'mobile' ? 'images/cover_page-mobile.PNG' : 'images/cover_page.PNG';
             coverPage = true;
             openBook = false;
             backCover = false;
@@ -885,6 +933,14 @@ if (currentMode === 'mobile') {
                     notebookHoverArea.addEventListener('click', () => {
                         const viewProject = document.querySelector('.projects-view');
                         if (viewProject) {
+                            const projectBookImg = document.querySelector('.book');
+                            projectBookImg.src = 'images/cover_page-mobile.PNG';
+
+                            const leftBtn = document.querySelector('.left-btn');
+                            const rightBtn = document.querySelector('.right-btn');
+                            leftBtn.textContent = 'back';
+                            rightBtn.textContent = 'next';
+
                             viewProject.style.display = 'block';
                             document.body.style.overflow = 'hidden';
                             projectSelected = true;

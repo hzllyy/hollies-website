@@ -766,9 +766,21 @@ h1, h2, p{
     .lets-connect-wrapper h1{
         font-size: 2vw !important;
     }
+
+    .popup-div {
+        width: 80vh;
+    }
 }
 
 @media (max-aspect-ratio: 109 / 200) {
+    h1 {
+        font-size: 8vw !important;
+    }
+
+    .resume-div p {
+        font-size: 3.5vw !important;
+    }
+
     .notification {
         position: fixed;
         z-index: 9999;
@@ -813,5 +825,47 @@ h1, h2, p{
         height: 6vw !important;
         margin: 0;
         top: 85vw;
+    }   
+
+    .project-book img {
+        height: 140vw;
+    }
+
+    .project-book {
+        display: grid !important;
+        grid-template-areas: 
+            'a a'
+            'b c';
+
+        grid-template-rows: 5fr 1fr;
+        gap: 0;
+        align-items: start;
+        justify-items: center;
+    }
+
+    .book {
+        grid-area: a;
+    }
+
+    .left-btn {
+        grid-area: b;
+    }
+
+    .right-btn {
+        grid-area: c;
+    }
+
+    .right-btn, .left-btn {
+        background-color: white;
+        height: 8vw;
+        width: 35vw;
+        opacity: 1;
+        border-radius: 5px;
+        font-size: 4vw;
+        color: #b40594;
+    }
+
+    .disabled {
+        opacity: 0.5;
     }
 }
