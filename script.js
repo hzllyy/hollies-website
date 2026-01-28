@@ -381,7 +381,7 @@ if (currentMode === 'mobile') {
 
     const hiWrapper = document.querySelector('.hi-wrapper');
     const hi = document.getElementById('hi');
-    hi.src = 'images/mobile-hi.PNG';
+    hi.src = 'images/mobile-hi.png';
     hi.style.height = '22vw';
     hiWrapper.style.zIndex = '9999';
     hiWrapper.style.top = '35%';

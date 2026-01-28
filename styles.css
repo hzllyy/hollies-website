@@ -772,6 +772,17 @@ h1, h2, p{
     }
 }
 
+@media (max-aspect-ratio: 150 / 200) {
+    h1 {
+        font-size: 8vw !important;
+    }
+
+    .resume-div p {
+        font-size: 3.5vw !important;
+    }
+
+}
+
 @media (max-aspect-ratio: 109 / 200) {
     h1 {
         font-size: 8vw !important;
@@ -867,5 +878,6 @@ h1, h2, p{
 
     .disabled {
         opacity: 0.5;
+        pointer-events: none;
     }
 }
