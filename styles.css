@@ -3,6 +3,10 @@ body {
     overflow-x: hidden;
 }
 
+html, body {
+    touch-action: pan-x pan-y;
+}
+
 .bg-wrapper {
   position: fixed;
   top: 0;
