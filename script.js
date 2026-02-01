@@ -412,7 +412,7 @@ if (currentMode === 'mobile') {
     // mobile scroll events
     window.addEventListener("scroll", () => {
         const scrollTop = window.scrollY;
-        // console.log(scrollTop);
+        console.log(scrollTop);
         const iama = document.getElementById('iama');
 
         function createNotif(typeName, location) {
@@ -565,7 +565,6 @@ if (currentMode === 'mobile') {
             
             window.style.opacity = fadePosition;
             window.style.transform = `scale(${scalePosition})`;
-            window.style.border = '2px solid red';
         }
 
         function createWindowMobile(windowId, content, headerText, buttons) {
@@ -625,6 +624,8 @@ if (currentMode === 'mobile') {
 
         if (scrollTop > 1400 && scrollTop <= 1600) {
             let existingWindow = document.getElementById('summary-window-id');
+            const hiWrapper = document.querySelector('.hi-wrapper');
+            hiWrapper.style.pointerEvents = 'none';
 
             if (!existingWindow) {  
                 // experience!
@@ -873,38 +874,16 @@ if (currentMode === 'mobile') {
             }
         }
 
-        // if (scrollTop > 1600) {
-        //     const aboutMeDiv = document.querySelector('.about-me');
-        //     const progress = Math.min((scrollTop - 1600) / 400, 1);
-    
-        //     // Move from starting position to target position
-        //     const startY = 100; // Starting position (px or vh)
-        //     const endY = 0;     // Ending position
-        //     const currentY = startY + (endY - startY) * progress;
-            
-        //     aboutMeDiv.style.transform = `translateY(${currentY}px)`;
-        // }
-
-        // if (scrollTop <= 3600) {
-        //     aboutMeAvatarCreated = false;
-
-        //     if (blinkInterval) {
-        //         clearInterval(blinkInterval);
-        //         blinkInterval = null;
-        //     }
-        //     removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
-        //     removeAboutMeWindow(avatarWindowEl, () => avatarWindowEl = null);
-        // }
-
-        // if (scrollTop > 3900 && aboutMeAvatarCreated) {
-        //     removeAboutMeWindow(hobbiesWindowEl, () => hobbiesWindowEl = null);
-        //     summaryHobbiesHidden = true;
-        //     aboutMeAvatarCreated = false;
-        // }
+        if (scrollTop > 1600) {
+            const aboutMeDiv = document.querySelector('.about-me');
+            const offset = (scrollTop - 1600) * 0.5;
+            const cappedOffset = Math.max(-150, -offset)
+            aboutMeDiv.style.marginTop = `${cappedOffset}vw`;
+        }
 
         // PAIN IN THE ASS avatar window zoom ;-;
-        if (scrollTop > 3900 && scrollTop <= 4600 && avatarWindowEl) {
-            const progress = (scrollTop - 3900) / 700;
+        if (scrollTop > 1900 && scrollTop <= 2600 && avatarWindowEl) {
+            const progress = (scrollTop - 1900) / 700;
 
             if (!start) {
                 const originalAvatarImg = avatarWindowEl.querySelector('.avatar-mobile');
@@ -923,7 +902,7 @@ if (currentMode === 'mobile') {
                 clone.style.top = `${rect.top}px`;
                 clone.style.height = `${avatarWindowEl.offsetHeight}px`;
                 clone.style.zIndex = '10';
-                clone.style.width = '85vw';
+                clone.style.width = '88.75%';
                 clone.style.fontSize = '4vw';
 
                 const clonedAvatarImg = clone.querySelector('.avatar-mobile');
@@ -947,27 +926,19 @@ if (currentMode === 'mobile') {
                 start = true;
             }
 
-            const originalHeight = parseFloat(avatarWindowEl.dataset.originalHeight);
-            const newHeight = originalHeight * (1 + (0.25 * progress));
-
             const clone = document.getElementById('avatar-window-clone');
             const innerWindow = clone?.querySelector('.aboutme-inner-window');
 
             if (clone) {
-                clone.style.height = `${newHeight}px`;
-                
                 const avatarImg = clone.querySelector('.avatar-mobile');
                 const outfitSwitch = clone.querySelector('.outfit-switch-mobile');
                 const belowHeader = clone.querySelector('.belowHeader');
-
-                const newInnerHeight = newHeight - 90;
                 
                 if (innerWindow && avatarImg && outfitSwitch && belowHeader) {
                     belowHeader.style.display = 'flex';
                     belowHeader.style.alignItems = 'stretch';
 
                     innerWindow.style.overflow = 'hidden';
-                    innerWindow.style.height = `${newInnerHeight}px`;
 
                     const scale3 = ((1/1.4) + progress) * 1.4;
                     const scale4 = ((1/16) + progress) * 16;
@@ -1076,7 +1047,7 @@ if (currentMode === 'mobile') {
             }
         }
 
-        if (scrollTop >= 4400 && !notificationCreated) {
+        if (scrollTop >= 2400 && !notificationCreated) {
             createNotification();
             
             const notification = document.querySelector('.notification');
@@ -1084,14 +1055,14 @@ if (currentMode === 'mobile') {
             notificationCreated = true;
         }
 
-        if (scrollTop < 4400 && notificationCreated) {
+        if (scrollTop < 2400 && notificationCreated) {
             const notification = document.querySelector('.notification');
             hideWindowWithAnimation(notification);
             notificationCreated = false;
         }
 
         // scroll past avatar zoom 
-        if (scrollTop > 4600 && scrollTop <= 4800) {
+        if (scrollTop > 2600 && scrollTop <= 2800) {
             const clone = document.getElementById('avatar-window-clone');
             cloneShouldExist = true;
             if (cloneWindowHidden) {
@@ -1103,11 +1074,6 @@ if (currentMode === 'mobile') {
                 if (!avatarWindowEl.dataset.originalHeight) {
                     avatarWindowEl.dataset.originalHeight = avatarWindowEl.offsetHeight / 1.25;
                 }
-                
-                const originalHeight = parseFloat(avatarWindowEl.dataset.originalHeight);
-                const newHeight = originalHeight * 1.25;
-                
-                clone.style.height = `${newHeight}px`;
                 
                 // Ensure blinking
                 const clonedAvatarImg = clone.querySelector('.avatar-mobile');
@@ -1147,7 +1113,7 @@ if (currentMode === 'mobile') {
             }
         }
 
-        if (scrollTop <= 3900 && avatarWindowEl) {
+        if (scrollTop <= 1900 && avatarWindowEl) {
             const clone = document.getElementById('avatar-window-clone');
             if (clone) {
                 // stop blinking on the clone before removing
@@ -1213,13 +1179,13 @@ if (currentMode === 'mobile') {
             setupProjectBook();
         }
 
-        if (scrollTop > 4800 && cloneShouldExist) {
-            const clone = document.getElementById('avatar-window-clone');
-            if (clone && !cloneWindowHidden) {
-                hideWindowWithAnimation(clone);
-                cloneWindowHidden = true;
-            }
-        }     
+        // if (scrollTop > 2700 && cloneShouldExist) {
+        //     const clone = document.getElementById('avatar-window-clone');
+        //     if (clone && !cloneWindowHidden) {
+        //         hideWindowWithAnimation(clone);
+        //         cloneWindowHidden = true;
+        //     }
+        // }     
 
     })
 
