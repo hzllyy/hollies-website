@@ -118,8 +118,12 @@ html, body {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10%;
+    align-items: center;
 
-    bottom: 10vw;
+    bottom: 12vw;
     width: 75vw;
 }
 
@@ -131,7 +135,7 @@ html, body {
 }
 
 .notif-designer {
-    width: 100%;
+    width: 0%;
     margin-bottom: 2%;
 }
 
@@ -156,6 +160,7 @@ html, body {
 
 .notif-creator {
     width: 100%;
+    margin-bottom: 2%;
 }
 
 .zoom-out {
@@ -731,9 +736,15 @@ h1, h2, p{
   animation: grain 0.3s steps(3) infinite;
 }
 
+.mobile-view {
+    display: none;
+}
+
 @media (max-aspect-ratio: 1.43/1) {
     .about-me {
         width: 90%;
+        height: 95%;
+        border: 2px solid green;
     }
 
     .belowHeader {
