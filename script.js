@@ -25,7 +25,7 @@ function isMobile() {
     const aspectRatio = window.innerWidth / window.innerHeight;
     const screenRatio = window.screen.width / window.screen.height;
 
-    const mobileRatio = { min: 0.40, max: 0.545};
+    const mobileRatio = { min: 0.30, max: 0.545};
 
     if (aspectRatio >= mobileRatio.min && aspectRatio <= mobileRatio.max ||
         screenRatio >= mobileRatio.min && screenRatio <= mobileRatio.max
@@ -115,11 +115,13 @@ function createWindow(windowId, content, headerText, buttons) {
     avatarWindow.className = "aboutme-window";
     avatarWindow.id = windowId;
 
-    avatarWindow.style.opacity = 0;
-
-    // avatarWindow.setAttribute('data-aos', 'zoom-in');
-    // avatarWindow.setAttribute('data-aos-duration', '300'); 
-    // avatarWindow.setAttribute('data-aos-once', 'true');
+    if (currentMode === 'mobile') {
+            avatarWindow.style.opacity = 1;
+    } else  {
+        avatarWindow.setAttribute('data-aos', 'zoom-in');
+        avatarWindow.setAttribute('data-aos-duration', '300'); 
+        avatarWindow.setAttribute('data-aos-once', 'true');
+    }
 
     // window header
     const avatarHeader = document.createElement('div');
@@ -1203,6 +1205,7 @@ if (currentMode === 'mobile') {
             showWindowWithAnimation(hobbyWindow);
             showWindowWithAnimation(summaryWindow);
         }
+
     })
 
 } else {

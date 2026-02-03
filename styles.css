@@ -72,7 +72,7 @@ html, body {
 }
 
 #extend {
-    height: 34.05vh;
+    height: 34.06vh;
     transform-origin: center top;
 }
 
@@ -783,6 +783,19 @@ h1, h2, p{
 
     .popup-div {
         width: 80vh;
+        height: 40vw;
+    }
+
+    .designer {
+        height: 40vh;
+    }
+
+    .developer {
+        height: 44vh;
+    }
+
+    .creator {
+        height: 44vh;
     }
 }
 
