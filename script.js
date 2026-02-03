@@ -1179,14 +1179,30 @@ if (currentMode === 'mobile') {
             setupProjectBook();
         }
 
-        // if (scrollTop > 2700 && cloneShouldExist) {
-        //     const clone = document.getElementById('avatar-window-clone');
-        //     if (clone && !cloneWindowHidden) {
-        //         hideWindowWithAnimation(clone);
-        //         cloneWindowHidden = true;
-        //     }
-        // }     
+        if (scrollTop > 2900 && cloneShouldExist) {
+            const clone = document.getElementById('avatar-window-clone');
+            if (clone && !cloneWindowHidden) {
+                hideWindowWithAnimation(clone);
+                cloneWindowHidden = true;
 
+                const summaryWindow = document.getElementById('summary-window-id');
+                const hobbyWindow = document.getElementById('hobbies-window-id');
+                const avatarWindow = document.getElementById('avatar-window-id');
+
+                hideWindowWithAnimation(summaryWindow);
+                hideWindowWithAnimation(hobbyWindow);
+
+                cloneShouldExist = false;
+            }
+        }     
+
+        if (scrollTop <= 2900 && !cloneShouldExist && cloneWindowHidden) {
+            const summaryWindow = document.getElementById('summary-window-id');
+            const hobbyWindow = document.getElementById('hobbies-window-id');
+
+            showWindowWithAnimation(hobbyWindow);
+            showWindowWithAnimation(summaryWindow);
+        }
     })
 
 } else {

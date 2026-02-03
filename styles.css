@@ -798,6 +798,14 @@ h1, h2, p{
 }
 
 @media (max-aspect-ratio: 109 / 200) {
+    body {
+        height: 3000px;
+    }
+
+    .contact-me {
+        top: 4200px;
+    }
+
     h1 {
         font-size: 8vw !important;
     }
@@ -809,9 +817,9 @@ h1, h2, p{
     .notification {
         position: fixed;
         z-index: 9999;
-        top: 28%;
+        top: 26%;
         left: 12%;
-        height: 8vw;
+        height: 7vw;
         visibility: hidden;
     }
 
