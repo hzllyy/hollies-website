@@ -25,7 +25,7 @@ function isMobile() {
     const aspectRatio = window.innerWidth / window.innerHeight;
     const screenRatio = window.screen.width / window.screen.height;
 
-    const mobileRatio = { min: 0.30, max: 0.545};
+    const mobileRatio = { min: 0.30, max: 0.9285};
 
     if (aspectRatio >= mobileRatio.min && aspectRatio <= mobileRatio.max ||
         screenRatio >= mobileRatio.min && screenRatio <= mobileRatio.max
@@ -366,24 +366,13 @@ if (currentMode === 'mobile') {
     const hiWrapper = document.querySelector('.hi-wrapper');
     const hi = document.getElementById('hi');
     const logo = document.getElementById('logo');
-    const logoWrapper = document.querySelector('.logo-wrapper');
     const nwindow = document.getElementById('window');
-    const nwindowWrapper = document.querySelector('.window-wrapper');
     const extender = document.getElementById('extend');
-    const extenderWrapper= document.querySelector('.extender-wrapper');
 
     hi.src = 'images/mobile-hi.png';
-    hi.style.height = '60vw';
     hiWrapper.style.zIndex = '9999';
-    hiWrapper.style.top = '80vw';
     hiWrapper.style.transform = 'translate(-50%, -50%)';
 
-    nwindow.style.height = '72vw';
-    nwindowWrapper.style.top = '95vw';
-    extender.style.height = '49vw';
-    extenderWrapper.style.top = '121vw';
-    logo.style.height = '45vw';
-    logoWrapper.style.top = '107vw';
     iama.style.display = 'none';
 
     let hasShownUI = false;
@@ -414,7 +403,7 @@ if (currentMode === 'mobile') {
     // mobile scroll events
     window.addEventListener("scroll", () => {
         const scrollTop = window.scrollY;
-        console.log(scrollTop);
+        // console.log(scrollTop);
         const iama = document.getElementById('iama');
 
         function createNotif(typeName, location) {
@@ -473,15 +462,11 @@ if (currentMode === 'mobile') {
             let progress = scrollTop / 1000;
             const scale3 = progress * 2;
 
-            const iamaWrapper = document.querySelector('.iama-wrapper');
-
             nwindow.style.transform = `translateY(${-(1/120 + progress) * 120}%)`;
             extender.style.transform = `translateY(${-(1/120 + progress) * 120}%)`;
             logo.style.transform = `translateY(${-(1/130 + progress) * 130}%)`;
             hi.style.transform = `translateY(${-(1/130 + progress) * 130}%)`;
             iama.style.display = 'block';
-            iama.style.height = '30vw';
-            iamaWrapper.style.top = '107vw';
             iama.style.transform = `translateY(${-((1 / 250) + progress) * 250}%) scale(${scale3})`;
 
             // fade the caption
@@ -558,7 +543,6 @@ if (currentMode === 'mobile') {
             scalePosition = Math.max(0, Math.min(scalePosition, 1));
 
             let notifHeight = ((scrollTop - triggerScroll) / 100) * 100;
-            let heightPosition = Math.max(0, Math.min(notifHeight, 100), 1)
 
             if (reverse) {
                 fadePosition = 1 - fadePosition;
@@ -879,13 +863,13 @@ if (currentMode === 'mobile') {
         if (scrollTop > 1600) {
             const aboutMeDiv = document.querySelector('.about-me');
             const offset = (scrollTop - 1600) * 0.5;
-            const cappedOffset = Math.max(-150, -offset)
+            const cappedOffset = Math.max(-130, -offset)
             aboutMeDiv.style.marginTop = `${cappedOffset}vw`;
         }
 
         // PAIN IN THE ASS avatar window zoom ;-;
-        if (scrollTop > 1900 && scrollTop <= 2600 && avatarWindowEl) {
-            const progress = (scrollTop - 1900) / 700;
+        if (scrollTop > 2000 && scrollTop <= 2700 && avatarWindowEl) {
+            const progress = (scrollTop - 2000) / 700;
 
             if (!start) {
                 const originalAvatarImg = avatarWindowEl.querySelector('.avatar-mobile');
@@ -904,7 +888,7 @@ if (currentMode === 'mobile') {
                 clone.style.top = `${rect.top}px`;
                 clone.style.height = `${avatarWindowEl.offsetHeight}px`;
                 clone.style.zIndex = '10';
-                clone.style.width = '88.75%';
+                clone.style.width = '65%';
                 clone.style.fontSize = '4vw';
 
                 const clonedAvatarImg = clone.querySelector('.avatar-mobile');
@@ -947,7 +931,7 @@ if (currentMode === 'mobile') {
                     const scale5 = ((1/22)+ progress) * 22;
                     const scale6 = ((1/5) + progress) * 5;
 
-                    avatarImg.style.height = '120vw';
+                    avatarImg.style.height = '100vw';
                     avatarImg.style.flexShrink = '0';
                     avatarImg.style.transform = `scale(${scale3}) translateX(-${scale4}%)`;
                     
@@ -973,7 +957,7 @@ if (currentMode === 'mobile') {
                     innerWindow.appendChild(notebook);
                     
                     notebook.style.position = 'absolute';
-                    notebook.style.height = '115vw';
+                    notebook.style.height = '95vw';
                     
                     const notebookHoverArea = document.createElement('div');
                     notebookHoverArea.className = 'notebook-hover-area';
@@ -1039,7 +1023,7 @@ if (currentMode === 'mobile') {
                 }
 
                 const bag = innerWindow.querySelector('.bag');
-                bag.style.height = '120vw';
+                bag.style.height = '100vw';
                 if (bag) {
                     bag.style.transform = `scale(${scale3}) translateX(-${scale4}%)`;
                     bag.style.transformOrigin = 'center center';
@@ -1049,7 +1033,7 @@ if (currentMode === 'mobile') {
             }
         }
 
-        if (scrollTop >= 2400 && !notificationCreated) {
+        if (scrollTop >= 2500 && !notificationCreated) {
             createNotification();
             
             const notification = document.querySelector('.notification');
@@ -1057,14 +1041,14 @@ if (currentMode === 'mobile') {
             notificationCreated = true;
         }
 
-        if (scrollTop < 2400 && notificationCreated) {
+        if (scrollTop < 2500 && notificationCreated) {
             const notification = document.querySelector('.notification');
             hideWindowWithAnimation(notification);
             notificationCreated = false;
         }
 
         // scroll past avatar zoom 
-        if (scrollTop > 2600 && scrollTop <= 2800) {
+        if (scrollTop > 2700 && scrollTop <= 2900) {
             const clone = document.getElementById('avatar-window-clone');
             cloneShouldExist = true;
             if (cloneWindowHidden) {
@@ -1106,7 +1090,7 @@ if (currentMode === 'mobile') {
                     innerWindow.style.overflow = 'hidden';
                     
                     avatarImg.style.height = 'auto';
-                    avatarImg.style.maxHeight = '120vw';
+                    avatarImg.style.maxHeight = '100vw';
                     avatarImg.style.flexShrink = '0';
                     
                     outfitSwitch.style.flexShrink = '0';
@@ -1115,7 +1099,7 @@ if (currentMode === 'mobile') {
             }
         }
 
-        if (scrollTop <= 1900 && avatarWindowEl) {
+        if (scrollTop <= 2000 && avatarWindowEl) {
             const clone = document.getElementById('avatar-window-clone');
             if (clone) {
                 // stop blinking on the clone before removing
@@ -1181,15 +1165,14 @@ if (currentMode === 'mobile') {
             setupProjectBook();
         }
 
-        if (scrollTop > 2900 && cloneShouldExist) {
+        if (scrollTop > 3000 && cloneShouldExist) {
             const clone = document.getElementById('avatar-window-clone');
             if (clone && !cloneWindowHidden) {
                 hideWindowWithAnimation(clone);
                 cloneWindowHidden = true;
 
                 const summaryWindow = document.getElementById('summary-window-id');
-                const hobbyWindow = document.getElementById('hobbies-window-id');
-                const avatarWindow = document.getElementById('avatar-window-id');
+                const hobbyWindow = document.getElementById('hobbies-window-id'); 
 
                 hideWindowWithAnimation(summaryWindow);
                 hideWindowWithAnimation(hobbyWindow);
@@ -1198,7 +1181,7 @@ if (currentMode === 'mobile') {
             }
         }     
 
-        if (scrollTop <= 2900 && !cloneShouldExist && cloneWindowHidden) {
+        if (scrollTop <= 3000 && !cloneShouldExist && cloneWindowHidden) {
             const summaryWindow = document.getElementById('summary-window-id');
             const hobbyWindow = document.getElementById('hobbies-window-id');
 
@@ -1546,8 +1529,6 @@ if (currentMode === 'mobile') {
                 
                 // position correctly
                 clone.style.position = 'fixed';
-                clone.style.left = `${rect.left}px`;
-                clone.style.top = `${rect.top}px`;
                 clone.style.width = `${avatarWindowEl.offsetWidth}px`;
                 clone.style.zIndex = '10';
                 
@@ -1580,6 +1561,14 @@ if (currentMode === 'mobile') {
 
             const clone = document.getElementById('avatar-window-clone');
             if (clone) {
+                const aboutMe = document.querySelector('.about-me');
+                aboutMe.dataset.originalWidth = aboutMe.getBoundingClientRect().width;
+                const gridWidth = parseFloat(aboutMe.dataset.originalWidth);
+
+                console.log(`grid width: ${gridWidth}`);
+                const newWidth = originalWidth + (gridWidth - originalWidth) * progress
+
+                aboutMe.appendChild(clone);
                 clone.style.width = `${newWidth}px`;
                 
                 const innerWindow = clone.querySelector('.aboutme-inner-window');
@@ -1733,9 +1722,8 @@ if (currentMode === 'mobile') {
                 }
                 
                 const originalWidth = parseFloat(avatarWindowEl.dataset.originalWidth);
-                const newWidth = originalWidth * 2.75;
                 
-                clone.style.width = `${newWidth}px`;
+                clone.style.width = `100%`;
                 
                 // Ensure blinking
                 const clonedAvatarImg = clone.querySelector('.avatar');

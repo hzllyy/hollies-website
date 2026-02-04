@@ -135,7 +135,7 @@ html, body {
 }
 
 .notif-designer {
-    width: 0%;
+    width: 100%;
     margin-bottom: 2%;
 }
 
@@ -336,11 +336,6 @@ html, body {
     height: 75vh;
 }
 
-.avatar-mobile {
-    height: 120vw;
-    padding: 0 3vw;
-}
-
 .nav-btns {
     display: flex;
     flex-direction: row;
@@ -364,19 +359,15 @@ h1, h2, p{
     padding: 2vh 2vh;
 }
 
+.hobbies-div img {
+    margin-top: 0.5vw;
+    height: 6vw;
+}
+
 .hobbies-div-mobile {
     display: flex;
     gap: 1vw;
     padding: 1vh 0;
-}
-
-.hobbies-div img {
-    height: 12vh;
-}
-
-.hobbies-div-mobile img {
-    margin-top: 0.5vw;
-    height: 12vw;
 }
 
 .hobbies-div img:hover {
@@ -743,7 +734,6 @@ h1, h2, p{
 @media (max-aspect-ratio: 1.43/1) {
     .about-me {
         width: 90%;
-        height: 95%;
     }
 
     .belowHeader {
@@ -799,20 +789,293 @@ h1, h2, p{
     }
 }
 
-@media (max-aspect-ratio: 150 / 200) {
-    h1 {
-        font-size: 8vw !important;
+@media (max-aspect-ratio: 0.9285) {
+    #hi {
+        height: 40vw;
+    }
+
+    .about-me {
+        bottom: 0;
+    }
+
+    .hi-wrapper {
+        top: 35vw;
+    }
+
+    #window {
+        height: 50vw;
+    }
+
+    .window-wrapper {
+        top: 45vw;
+    }
+
+    #extend {
+        height: 34.05vw;
+    }
+
+    .extender-wrapper {
+        top: 65vw;
+    }
+
+    #logo {
+        height: 31.5vw;
+    }
+
+    .logo-wrapper {
+        top: 55.2vw;
+    }
+
+    #iama {
+        height: 22vw;
+    }
+
+    .iama-wrapper {
+        top: 56vw;
+    }
+
+    .popup-div-notif {
+        width: 50vw;
+        bottom: 7vw;
+    }
+
+    .about-me-mobile {
+        width: 65%;
     }
 
     .resume-div p {
+        font-size: 3vw !important;
+    }
+
+    .hobbies-div img {
+        height: 8vh;
+    }
+
+    .hobbies-div-mobile img {
+        height: 9vw;
+    }
+
+    h1 {
+        font-size: 6vw !important;
+    }
+
+    .avatar-mobile {
+        height: 100vw;
+        padding: 0 3vw;
+    }
+
+    .notification {
+        top: 25%;
+        left: 15%;
+    }
+
+    .project-book img {
+        height: 80vw;
+    }
+
+    .project-book {
+        display: grid !important;
+        grid-template-areas: 
+            'a a'
+            'b c';
+
+        grid-template-rows: 5fr 1fr;
+        gap: 0;
+        align-items: start;
+        justify-items: center;
+    }
+
+    .book {
+        grid-area: a;
+    }
+
+    .left-btn {
+        grid-area: b;
+    }
+
+    .right-btn {
+        grid-area: c;
+    }
+
+    .right-btn, .left-btn {
+        background-color: white;
+        height: 6vw;
+        width: 20vw;
+        opacity: 1;
+        border-radius: 5px;
+        font-size: 4vw;
+        color: #b40594;
+    }
+
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .envelope-back {
+        height: 105vw;
+    }
+
+    .notecard {
+        height: 115vw;
+        top: -10vw;
+    }
+
+    .envelope {
+        height: 105vw;
+    }
+
+    #form {
+        width: 28vw;
+        top: 6vw;
+    }
+
+    #form h1 {
         font-size: 3.5vw !important;
+    }
+
+    .small {
+        font-size: 2vw !important;
+    }
+
+    #message {
+        font-size: 2vw !important;
+    }
+
+    #form-submit  {
+        position: absolute;
+        height: 6vw !important;
+        margin: 0;
+        top: 52vh;
+        font-size: 2vw !important;
+        z-index: 99999;
+    }   
+
+    body {
+        height: 3000px;
+    }
+
+    .contact-me {
+        top: 4500px;
     }
 
 }
 
-@media (max-aspect-ratio: 109 / 200) {
+@media (max-aspect-ratio: 0.8) {
+    .outfit-switch-mobile button {
+        width: 5vh;
+        height: 5vh;
+    }
+
+    #hi {
+        height: 45vw;
+    }
+
+    .about-me {
+        bottom: 0;
+    }
+
+    .hi-wrapper {
+        top: 40vw;
+    }
+
+    #window {
+        height: 52vw;
+    }
+
+    .window-wrapper {
+        top: 50vw;
+    }
+
+    #extend {
+        height: 35.45vw;
+    }
+
+    .extender-wrapper {
+        top: 70vw;
+    }
+
+    #logo {
+        height: 32.5vw;
+    }
+
+    .logo-wrapper {
+        top: 60vw;
+    }
+
+    .iama-wrapper {
+        top: 60vw;
+    }
+
+    .popup-div-notif {
+        width: 55vw;
+        bottom: 14vw;
+    }
+
+}
+
+@media (max-aspect-ratio: 11/20) {
     body {
         height: 3000px;
+    }
+
+    #hi {
+        height: 60vw;
+    }
+
+    .hi-wrapper {
+        top: 80vw;
+    }
+
+    #window {
+        height: 72vw;
+    }
+
+    .window-wrapper {
+        top: 95vw;
+    }
+
+    #extend {
+        height: 49vw;
+    }
+
+    .extender-wrapper {
+        top: 121vw;
+    }
+
+    #logo {
+        height: 45vw;
+    }
+
+    .logo-wrapper {
+        top: 107vw;
+    }
+
+    #iama {
+        height: 30vw;
+    }
+
+    .iama-wrapper {
+        top: 107vw;
+    }
+
+    .popup-div-notif {
+        bottom: 12vw;
+        width: 75vw;
+    }
+
+    .hobbies-div img {
+        height: 12vh;
+    }
+
+    .hobbies-div-mobile img {
+        margin-top: 0.5vw;
+        height: 12vw;
+    }
+
+    .avatar-mobile {
+        height: 120vw;
+        padding: 0 3vw;
     }
 
     .contact-me {
