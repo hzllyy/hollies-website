@@ -1081,12 +1081,162 @@ h1, h2, p{
         width: 55vw;
         bottom: 14vw;
     }
+}
+
+@media (max-aspect-ratio: 0.725) {
+    .about-me-mobile {
+        width: 75%;
+    }
+
+    #hi {
+        height: 50vw;
+    }
+
+    .about-me {
+        bottom: 0;
+    }
+
+    .hi-wrapper {
+        top: 45vw;
+    }
+
+    #window {
+        height: 57vw;
+    }
+
+    .window-wrapper {
+        top: 55vw;
+    }
+
+    #extend {
+        height: 38.85vw;
+    }
+
+    .extender-wrapper {
+        top: 75vw;
+    }
+
+    #logo {
+        height: 35.5vw;
+    }
+
+    .logo-wrapper {
+        top: 64vw;
+    }
+
+    .iama-wrapper {
+        top: 62vw;
+    }
+
+    .popup-div-notif {
+        width: 60vw;
+        bottom: 14vw;
+    }
+
+    #avatar-window-clone {
+        width: 74.5% !important;
+    }
+
+    .project-book img {
+        height: 100vw;
+    }
+
+    .envelope-back {
+        height: 150vw;
+    }
+
+    .notecard {
+        height: 160vw;
+        top: -10vw;
+    }
+
+    .envelope {
+        height: 150vw;
+    }
+
+    #form {
+        width: 40vw;
+        top: 10vw;
+    }
+
+    #form h1 {
+        font-size: 4vw !important;
+    }
+
+    .small {
+        font-size: 2.5vw !important;
+    }
+
+    #message {
+        font-size: 2.5vw !important;
+    }
+
+    #form-submit  {
+        position: absolute;
+        height: 6vw !important;
+        margin: 0;
+        top: 52vh;
+        font-size: 2.5vw !important;
+        z-index: 99999;
+    }
 
 }
 
-@media (max-aspect-ratio: 11/20) {
-    body {
-        height: 3000px;
+@media (max-aspect-ratio: 0.64) {
+    #hi {
+        height: 55vw;
+    }
+
+    .hi-wrapper {
+        top: 50vw;
+    }
+
+    #window {
+        height: 57vw;
+    }
+
+    .window-wrapper {
+        top: 65vw;
+    }
+
+    #extend {
+        height: 38.85vw;
+    }
+
+    .extender-wrapper {
+        top: 85vw;
+    }
+
+    #logo {
+        height: 35.5vw;
+    }
+
+    .logo-wrapper {
+        top: 74vw;
+    }
+
+    .iama-wrapper {
+        top: 72vw;
+    }
+
+    .popup-div-notif {
+        width: 60vw;
+        bottom: 14vw;
+    }
+
+    .notification {
+        height: 4vh;
+    }
+}
+
+@media (max-aspect-ratio: 0.55) {
+
+    .about-me-mobile {
+        width: 80%;
+    }
+
+    #avatar-window-clone {
+        width: 79% !important;
     }
 
     #hi {
@@ -1135,17 +1285,12 @@ h1, h2, p{
     }
 
     .hobbies-div img {
-        height: 12vh;
+        height: 10vh;
     }
 
     .hobbies-div-mobile img {
         margin-top: 0.5vw;
-        height: 12vw;
-    }
-
-    .avatar-mobile {
-        height: 120vw;
-        padding: 0 3vw;
+        height: 10vw;
     }
 
     .contact-me {
