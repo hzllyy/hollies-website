@@ -1,3 +1,134 @@
+const imagesToPreload = [
+    'images/apple-avatar-closed.PNG',
+    'images/apple-avatar-open.PNG',
+    'images/back_cover-mobile.png',
+    'images/back_cover.PNG',
+    'images/bag.PNG',
+    'images/baking.PNG',
+    'images/connect.PNG',
+    'images/cover_page-mobile.png',
+    'images/cover_page.PNG',
+    'images/creator.png',
+    'images/css3.PNG',
+    'images/dance.PNG',
+    'images/default-avatar-closed.PNG',
+    'images/default-avatar-open.PNG',
+    'images/designer.png',
+    'images/developer.png',
+    'images/draw.PNG',
+    'images/envelope-back.PNG',
+    'images/envelope.PNG',
+    'images/fourth&hope-mobile.png',
+    'images/fourth&hope-turn-left.png',
+    'images/fourth&hope-turn-right.png',
+    'images/fourth&hope.png',
+    'images/hi.png',
+    'images/html5.PNG',
+    'images/iama.png',
+    'images/idolchase-mobile.png',
+    'images/idolchase-turn-left.png',
+    'images/idolchase-turn-right.png',
+    'images/idolchase.png',
+    'images/js.PNG',
+    'images/left_turn.PNG',
+    'images/logo-closed.PNG',
+    'images/logo-left.PNG',
+    'images/logo-right.PNG',
+    'images/lumen-mobile.png',
+    'images/lumen-turn-left.png',
+    'images/lumen-turn-right.png',
+    'images/lumen.png',
+    'images/mobile-hi.png',
+    'images/nodejs.PNG',
+    'images/notecard.PNG',
+    'images/notif-creator.png',
+    'images/notif-designer.png',
+    'images/notif-developer.png',
+    'images/open_book.PNG',
+    'images/portfolio_bg.PNG',
+    'images/porfolio_screen.PNG',
+    'images/project_notification.png',
+    'images/project-notebook-mobile.PNG',
+    'images/project-notebook-open-mobile.PNG',
+    'images/project-notebook-selected.PNG',
+    'images/project-notebook-unselected.PNG',
+    'images/react.PNG',
+    'images/right-turn.PNG',
+    'images/seasonal-mobile.png',
+    'images/seasonal-turn-left.png',
+    'images/seasonal-turn-right.png',
+    'images/seasonal.png',
+    'images/sent_message.png',
+    'images/whoami.png',
+    'images/window-extender.png',
+    'images/window.png',
+    'images/winter-avatar-closed.PNG',
+    'images/winter-avatar-open.PNG',
+    'images/y2k-avatar-closed.PNG',
+    'images/y2k-avatar-open.PNG'
+]
+
+let imagesLoaded = 0;
+const totalImages = imagesToPreload.length;
+
+function updateLoadingProgress() {
+    const percentage = Math.round((imagesLoaded / totalImages) * 100);
+    const progressBar = document.querySelector('.loading-progress-bar');
+    const progressText = document.querySelector('.loading-percentage');
+    
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+    }
+    if (progressText) {
+        progressText.textContent = percentage + '%';
+    }
+}
+
+function preloadImages() {
+    return new Promise((resolve) => {
+        if (imagesToPreload.length === 0) {
+            resolve();
+            return;
+        }
+
+        imagesToPreload.forEach((src) => {
+            const img = new Image();
+            img.onload = img.onerror = () => {
+                imagesLoaded++;
+                updateLoadingProgress();
+                
+                if (imagesLoaded === totalImages) {
+                    resolve();
+                }
+            };
+            img.src = src;
+        });
+    });
+}
+
+// Show content after images are loaded
+async function initializePage() {
+    const loadingScreen = document.querySelector('.loading-screen');
+    
+    await preloadImages();
+    
+    // Fade out loading screen
+    if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            document.body.style.overflow = ''; // Re-enable scrolling
+        }, 500);
+    }
+}
+
+// Start loading when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePage);
+} else {
+    initializePage();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     
     const logo = document.getElementById('logo');
