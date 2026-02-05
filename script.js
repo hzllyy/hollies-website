@@ -1,3 +1,6 @@
+const DEBUG_MODE = false;
+const DEBUG_FREEZE_AT_PERCENTAGE = 50;
+
 const imagesToPreload = [
     'images/apple-avatar-closed.PNG',
     'images/apple-avatar-open.PNG',
@@ -71,6 +74,20 @@ const imagesToPreload = [
 let imagesLoaded = 0;
 const totalImages = imagesToPreload.length;
 
+const bunny = document.getElementById('bunny');
+
+const images = [
+    'images/bunny_1.PNG',
+    'images/bunny_2.PNG'
+];
+
+let index = 0;
+
+setInterval(() => {
+    index = (index + 1) % images.length;
+    bunny.src = images[index];
+}, 700);
+
 function updateLoadingProgress() {
     const percentage = Math.round((imagesLoaded / totalImages) * 100);
     const progressBar = document.querySelector('.loading-progress-bar');
@@ -81,6 +98,10 @@ function updateLoadingProgress() {
     }
     if (progressText) {
         progressText.textContent = percentage + '%';
+    }
+
+    if (DEBUG_MODE) {
+        console.log(`Loading: ${percentage}% (${imagesLoaded}/${totalImages} images)`);
     }
 }
 
@@ -96,6 +117,12 @@ function preloadImages() {
             img.onload = img.onerror = () => {
                 imagesLoaded++;
                 updateLoadingProgress();
+
+                if (DEBUG_MODE && imagesLoaded >= Math.ceil((DEBUG_FREEZE_AT_PERCENTAGE / 100) * totalImages)) {
+                    console.log(`Debug Mode: Frozen at ${DEBUG_FREEZE_AT_PERCENTAGE}%`);
+                    console.log('Set Debug Mode = false to continue');
+                    return; 
+                }
                 
                 if (imagesLoaded === totalImages) {
                     resolve();
@@ -106,23 +133,33 @@ function preloadImages() {
     });
 }
 
-// Show content after images are loaded
+function minimumLoadingTime(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function initializePage() {
     const loadingScreen = document.querySelector('.loading-screen');
+
+    if (DEBUG_MODE) {
+        console.log('DEBUG MODE ENABLED');
+        console.log(`Will freeze at ${DEBUG_FREEZE_AT_PERCENTAGE}%`);
+        console.log('Loading screen will stay visible for editing');
+    }
     
-    await preloadImages();
+    await Promise.all([
+        preloadImages(),
+        minimumLoadingTime(3000)
+    ]);
     
-    // Fade out loading screen
     if (loadingScreen) {
         loadingScreen.style.opacity = '0';
         setTimeout(() => {
             loadingScreen.style.display = 'none';
-            document.body.style.overflow = ''; // Re-enable scrolling
-        }, 500);
+            document.body.style.overflow = '';
+        }, 1000);
     }
 }
 
-// Start loading when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializePage);
 } else {

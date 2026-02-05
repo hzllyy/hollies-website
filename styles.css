@@ -4,12 +4,11 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background:#f0aedc;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 99999;
-    transition: opacity 0.5s ease;
 }
 
 .loading-content {
@@ -18,12 +17,11 @@
 }
 
 .loading-logo {
-    margin-bottom: 2rem;
-    animation: pulse 2s ease-in-out infinite;
+    margin-bottom: 3vh;
 }
 
 .loading-logo img {
-    width: 100px;
+    width: 8vh;
     height: auto;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
 }
@@ -57,15 +55,6 @@
     font-family: 'Anonymous Pro', monospace;
     font-size: 1.2rem;
     font-weight: bold;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
 }
 
 body {
