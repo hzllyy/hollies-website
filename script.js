@@ -242,7 +242,7 @@ let notebookCreated = false;
 
 // check for project
 let projectSelected = false;
-const numPages = 4;
+const numPages = 3;
 let coverPage = true;
 let backCover = false;
 let openBook = false;
@@ -401,7 +401,7 @@ function setupProjectBook() {
         const freshLeftBtn = document.querySelector('.left-btn');
         const freshRightBtn = document.querySelector('.right-btn');
 
-        const pageNames = ['seasonal', 'lumen', 'fourth&hope', 'idolchase'];
+        const pageNames = ['lumen', 'fourth&hope', 'idolchase'];
         
         function getPageImage(pageIndex, turnType = null) {
             const pageName = pageNames[pageIndex];
@@ -1594,10 +1594,10 @@ if (currentMode === 'mobile') {
             weeeDiv.className = 'resume-div';
             const weeeHeader = document.createElement('h3');
             weeeHeader.className = 'resume-header';
-            weeeHeader.textContent = 'Software Engineer @ Weee!'
+            weeeHeader.textContent = 'React Developer Intern @ Antra'
             weeeDiv.appendChild(weeeHeader);
             const weeeFirstBullet = document.createElement('p');
-            weeeFirstBullet.textContent = 'Designed and shipped a CMS-like seasonal campaign system powering dynamic React storefronts and homepage modules via backend APIs and feature-flagged rollouts, enabling non-engineering teams to launch and iterate on high-traffic holiday campaigns without code changes while preserving site reliability.';
+            weeeFirstBullet.textContent = 'Developed scalable React features for an enterprise Learning Management System (LMS), integrated RESTful APIs with a Node.js/PostgreSQL backend on AWS, and implemented Docker-based CI/CD pipelines and a micro-frontend architecture to improve deployment automation, application modularity, and team collaboration';
             weeeHeader.appendChild(weeeFirstBullet);
             aboutMeContent.appendChild(weeeDiv);
 
